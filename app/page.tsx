@@ -79,7 +79,10 @@ export default function Home() {
   );
 
   return (
-    <div className="relative isolate min-h-screen bg-background p-4 md:p-8" ref={scope}>
+    <div
+      className="relative isolate min-h-screen bg-background p-4 md:p-8"
+      ref={scope}
+    >
       <div className="absolute inset-0 -z-10 rounded-3xl bg-linear-to-br from-[#fff0e1] via-[#fff8f2] to-[#ffeede]" />
       <main className="mx-auto grid min-h-[calc(100vh-2rem)] max-w-[1140px] items-center gap-7 py-4 md:min-h-[calc(100vh-4rem)] md:grid-cols-[minmax(0,1fr)_minmax(320px,520px)] md:gap-14 md:py-0">
         <section className="max-w-[560px]">
@@ -89,10 +92,7 @@ export default function Home() {
           >
             TinyWins Habit Tracker
           </p>
-          <h1
-            className="mt-3 text-[clamp(2rem,4.6vw,4.1rem)] leading-[1.04] font-semibold tracking-[-0.03em] text-foreground"
-            data-animate="headline"
-          >
+          <h1 data-animate="headline">
             Build streaks you can see at a glance.
           </h1>
           <p
@@ -118,12 +118,17 @@ export default function Home() {
               View weekly demo
             </Link>
           </div>
-          <div className="mt-5 flex flex-wrap gap-4 text-[0.94rem] text-muted" data-animate="subtext">
+          <div
+            className="mt-5 flex flex-wrap gap-4 text-[0.94rem] text-muted"
+            data-animate="subtext"
+          >
             <p className="m-0">
-              <span className="font-bold text-foreground">182</span> days tracked
+              <span className="font-bold text-foreground">182</span> days
+              tracked
             </p>
             <p className="m-0">
-              <span className="font-bold text-foreground">86%</span> completion rate
+              <span className="font-bold text-foreground">86%</span> completion
+              rate
             </p>
           </div>
         </section>
@@ -133,7 +138,9 @@ export default function Home() {
           aria-label="Habit heat map"
         >
           <header className="mb-4 flex items-baseline justify-between gap-3">
-            <h2 className="m-0 text-[1.05rem] font-semibold">TinyWins Activity Board</h2>
+            <h4 className="m-0 text-[1.05rem] font-semibold">
+              TinyWins Activity Board
+            </h4>
             <p className="m-0 font-mono text-xs text-muted">Last 26 weeks</p>
           </header>
 

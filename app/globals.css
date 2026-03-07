@@ -1,29 +1,45 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #fff4ea;
-  --color-foreground: #2b160d;
-  --color-primary: #c84a1b;
-  --color-primary-foreground: #fff8f3;
-  --color-muted: #7d4f37;
-  --color-card: #fff9f4;
-  --color-card-border: #efd0b6;
-  --color-accent-0: #f8e6d8;
-  --color-accent-1: #f5c6a5;
-  --color-accent-2: #ef9b6d;
-  --color-accent-3: #e3713f;
-  --color-accent-4: #c84a1b;
-  --font-sans: var(--font-space-grotesk);
-  --font-mono: var(--font-ibm-plex-mono);
+    --color-background: #fff4ea;
+    --color-foreground: #2b160d;
+    --color-primary: #c84a1b;
+    --color-primary-foreground: #fff8f3;
+    --color-muted: #7d4f37;
+    --color-card: #fff9f4;
+    --color-card-border: #efd0b6;
+    --color-accent-0: #f8e6d8;
+    --color-accent-1: #f5c6a5;
+    --color-accent-2: #ef9b6d;
+    --color-accent-3: #e3713f;
+    --color-accent-4: #c84a1b;
+    --font-sans: var(--font-space-grotesk);
+    --font-mono: var(--font-ibm-plex-mono);
 }
 
 body {
-  color: var(--color-foreground);
-  font-family: var(--font-space-grotesk), sans-serif;
-  min-height: 100vh;
-  margin: 0;
-  background:
-    radial-gradient(circle at 5% 0%, #ffe4cf 0, transparent 32%),
-    radial-gradient(circle at 100% 100%, #ffd5bd 0, transparent 36%),
-    var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-space-grotesk), sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    background:
+        radial-gradient(circle at 5% 0%, #ffe4cf 0, transparent 32%),
+        radial-gradient(circle at 100% 100%, #ffd5bd 0, transparent 36%),
+        var(--color-background);
+}
+
+h1 {
+    @apply mt-3 text-6xl leading-[1.04] font-normal tracking-[-0.03em] text-foreground;
+}
+
+h2 {
+    @apply mt-3 text-4xl leading-[1.04] font-normal tracking-[-0.03em] text-foreground;
+}
+
+h3 {
+    @apply mt-3 text-2xl leading-[1.04] font-normal tracking-[-0.03em] text-foreground;
+}
+
+h4 {
+    @apply mt-3 text-xl leading-[1.04] font-normal tracking-[-0.03em] text-foreground;
 }
