@@ -10,8 +10,11 @@ const LEVEL_CLASSES = [
   "bg-blue-500/80",
   "bg-blue-500/100",
 ];
+
+const DAILY_GOAL = 8;
+
 export default function DemoPage() {
-  const [userLevel, setUserLevel] = useState(0);
+  const [cupsLogged, setCupsLogged] = useState(0);
   const activity = useMemo(
     () =>
       Array.from({ length: 182 }, (_, index) => {
@@ -26,11 +29,18 @@ export default function DemoPage() {
     [],
   );
 
+  const completionPercent = Math.round((cupsLogged / DAILY_GOAL) * 100);
+
   const handleAddWater = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setUserLevel((prev) => Math.min(prev + 5, 100));
+    setCupsLogged((prev) => Math.min(prev + 1, DAILY_GOAL));
   };
-  console.log(userLevel);
+
+  const handleResetWater = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setCupsLogged(0);
+  };
+
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-3xl items-center p-4 md:p-8">
       <div className="w-full">
@@ -40,9 +50,28 @@ export default function DemoPage() {
         <Card className="w-full">
           <div className="space-y-1.5 p-5">
             <h2 className="h2">Demo</h2>
+            <p className="text-sm text-black/65">Track your daily hydration and keep your streak moving.</p>
           </div>
-          <div className="flex items-center justify-between">
-            <p> Cups of Water </p>
+          <div className="space-y-4 px-5 pb-5">
+            <div className="flex items-center justify-between">
+              <p className="font-medium">Cups of Water</p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleResetWater}
+                  className="rounded-lg border border-black/10 px-3 py-2 text-sm text-black/70 transition-colors hover:bg-black/[0.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+                >
+                  Reset
+                </button>
+                <button
+                  type="button"
+                  onClick={handleAddWater}
+                  className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+                >
+                  +1
+                </button>
+              </div>
+            </div>
             <div
               className="grid auto-cols-[10px] grid-flow-col grid-rows-7 gap-1 overflow-x-auto pb-1 md:auto-cols-[12px]"
               role="img"
@@ -54,23 +83,41 @@ export default function DemoPage() {
                   data-square
                   data-level={level}
                   className={`h-[10px] w-[10px] rounded-[3px] border border-[#26110914] md:h-[12px] md:w-[12px] ${LEVEL_CLASSES[level]}`}
-                  aria-hidden="true"
+                  aria-label={`${count} cups logged`}
                 />
               ))}
               <span
                 data-square
                 data-level={4}
-                className={`h-[10px] w-[10px] rounded-[3px] border border-[#26110914] md:h-[12px] md:w-[12px] bg-blue-500/${userLevel}`}
-                aria-hidden="true"
+                className="h-[10px] w-[10px] rounded-[3px] border border-[#26110914] bg-blue-500 md:h-[12px] md:w-[12px]"
+                style={{ opacity: Math.max(0.2, completionPercent / 100) }}
+                aria-label={`Today: ${cupsLogged} cups`}
               />
             </div>
-            <button
-              type="button"
-              onClick={handleAddWater}
-              className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
-            >
-              +1
-            </button>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <p className="font-medium">{cupsLogged} / {DAILY_GOAL} cups</p>
+                <p className="text-black/65">{completionPercent}% complete</p>
+              </div>
+              <div className="h-2 w-full rounded-full bg-blue-100">
+                <div
+                  className="h-2 rounded-full bg-blue-500 transition-all"
+                  style={{ width: `${completionPercent}%` }}
+                />
+              </div>
+            </div>
+            <div className="flex items-center justify-end gap-2 text-xs text-black/60">
+              <span>Less</span>
+              {LEVEL_CLASSES.map((levelClass, index) => (
+                <span
+                  key={levelClass}
+                  className={`h-3 w-3 rounded-[3px] border border-[#26110914] ${levelClass}`}
+                  aria-hidden="true"
+                  title={`Intensity ${index + 1}`}
+                />
+              ))}
+              <span>More</span>
+            </div>
           </div>
         </Card>
       </div>
