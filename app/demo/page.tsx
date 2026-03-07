@@ -1,7 +1,11 @@
 "use client";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(useGSAP);
 
 const LEVEL_CLASSES = [
   "bg-blue-500/20",
@@ -14,6 +18,7 @@ const LEVEL_CLASSES = [
 const DAILY_GOAL = 8;
 
 export default function DemoPage() {
+  const scope = useRef<HTMLDivElement>(null);
   const [cupsLogged, setCupsLogged] = useState(0);
   const activity = useMemo(
     () =>
@@ -42,8 +47,25 @@ export default function DemoPage() {
     setCupsLogged(0);
   };
 
+  useGSAP(
+    () => {
+      gsap.from("[data-square]", {
+        scale: 0,
+        opacity: 0,
+        transformOrigin: "center",
+        duration: 0.32,
+        ease: "power2.out",
+        stagger: { each: 0.004, from: "random" },
+      });
+    },
+    { scope },
+  );
+
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-3xl items-center p-4 md:p-8">
+    <main
+      className="mx-auto flex min-h-screen w-full max-w-3xl items-center p-4 md:p-8"
+      ref={scope}
+    >
       <div className="w-full">
         <Link href="/">
           <p className="mb-4 text-sm">{"<"}- Back to Landing</p>
