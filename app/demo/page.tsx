@@ -30,10 +30,11 @@ export default function DemoPage() {
   );
 
   const completionPercent = Math.round((cupsLogged / DAILY_GOAL) * 100);
+  const progressPercent = Math.min(completionPercent, 100);
 
   const handleAddWater = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setCupsLogged((prev) => Math.min(prev + 1, DAILY_GOAL));
+    setCupsLogged((prev) => prev + 1);
   };
 
   const handleResetWater = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -90,7 +91,7 @@ export default function DemoPage() {
                 data-square
                 data-level={4}
                 className="h-[10px] w-[10px] rounded-[3px] border border-[#26110914] bg-blue-500 md:h-[12px] md:w-[12px]"
-                style={{ opacity: Math.max(0.2, completionPercent / 100) }}
+                style={{ opacity: Math.max(0.2, Math.min(completionPercent / 100, 1)) }}
                 aria-label={`Today: ${cupsLogged} cups`}
               />
             </div>
@@ -102,7 +103,7 @@ export default function DemoPage() {
               <div className="h-2 w-full rounded-full bg-blue-100">
                 <div
                   className="h-2 rounded-full bg-blue-500 transition-all"
-                  style={{ width: `${completionPercent}%` }}
+                  style={{ width: `${progressPercent}%` }}
                 />
               </div>
             </div>
