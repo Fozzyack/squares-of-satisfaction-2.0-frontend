@@ -1,64 +1,138 @@
-import Image from "next/image";
+"use client";
+
+import { useMemo, useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(useGSAP);
+
+const LEVEL_LABELS = ["None", "Low", "Steady", "Strong", "Peak"];
 
 export default function Home() {
+  const scope = useRef<HTMLDivElement>(null);
+
+  const activity = useMemo(
+    () =>
+      Array.from({ length: 182 }, (_, index) => {
+        const seed = Math.sin(index * 0.41) + Math.cos(index * 0.19) * 0.55;
+        const level = Math.max(0, Math.min(4, Math.floor((seed + 1.6) * 1.5)));
+        return {
+          id: index,
+          level,
+          count: level === 0 ? 0 : level * 2 + (index % 3),
+        };
+      }),
+    [],
+  );
+
+  useGSAP(
+    () => {
+      const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+      timeline
+        .from("[data-animate='headline']", { y: 30, opacity: 0, duration: 0.7 })
+        .from(
+          "[data-animate='subtext']",
+          { y: 24, opacity: 0, duration: 0.6 },
+          "<0.1",
+        )
+        .from(
+          "[data-animate='cta']",
+          { y: 16, opacity: 0, duration: 0.45, stagger: 0.08 },
+          "<0.05",
+        )
+        .from(
+          "[data-square]",
+          {
+            scale: 0,
+            transformOrigin: "center",
+            duration: 0.35,
+            stagger: { each: 0.004, from: "random" },
+          },
+          "<0.15",
+        );
+
+      gsap.to("[data-level='4']", {
+        opacity: 0.5,
+        repeat: -1,
+        yoyo: true,
+        duration: 1.3,
+        ease: "sine.inOut",
+        stagger: { each: 0.06, from: "edges" },
+      });
+    },
+    { scope },
+  );
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="landing" ref={scope}>
+      <div className="ambient" />
+      <main className="hero-shell">
+        <section className="hero-copy">
+          <p className="eyebrow" data-animate="headline">
+            TinyWins Habit Tracker
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          <h1 className="hero-title" data-animate="headline">
+            Build streaks you can see at a glance.
+          </h1>
+          <p className="hero-subtext" data-animate="subtext">
+            TinyWins turns your daily actions into a living contribution map.
+            Stay consistent, spot patterns, and keep momentum with every square.
+          </p>
+          <div className="hero-actions">
+            <a href="#" className="btn-primary" data-animate="cta">
+              Start tracking
+            </a>
+            <a href="#" className="btn-secondary" data-animate="cta">
+              View weekly demo
+            </a>
+          </div>
+          <div className="hero-stats" data-animate="subtext">
+            <p>
+              <span>182</span> days tracked
+            </p>
+            <p>
+              <span>86%</span> completion rate
+            </p>
+          </div>
+        </section>
+
+        <section className="board-card" aria-label="Habit heat map">
+          <header className="board-head">
+            <h2>Contribution-style Habit Board</h2>
+            <p>Last 26 weeks</p>
+          </header>
+
+          <div className="month-row" aria-hidden="true">
+            <span>Oct</span>
+            <span>Nov</span>
+            <span>Dec</span>
+            <span>Jan</span>
+            <span>Feb</span>
+            <span>Mar</span>
+          </div>
+
+          <div className="heatmap" role="img" aria-label="Daily habit intensity heatmap">
+            {activity.map(({ id, level, count }) => (
+              <span
+                key={id}
+                data-square
+                data-level={level}
+                className="cell"
+                title={`${count} completions - ${LEVEL_LABELS[level]}`}
+                aria-hidden="true"
+              />
+            ))}
+          </div>
+
+          <div className="legend" aria-hidden="true">
+            <span>Less</span>
+            {[0, 1, 2, 3, 4].map((level) => (
+              <span key={level} className="cell" data-level={level} />
+            ))}
+            <span>More</span>
+          </div>
+        </section>
       </main>
     </div>
   );
