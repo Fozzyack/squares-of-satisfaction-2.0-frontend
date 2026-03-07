@@ -92,11 +92,14 @@ export default function Home() {
           >
             TinyWins Habit Tracker
           </p>
-          <h1 data-animate="headline">
+          <h1
+            className="mt-3 text-4xl leading-tight font-medium tracking-tight text-foreground md:text-6xl"
+            data-animate="headline"
+          >
             Build streaks you can see at a glance.
           </h1>
           <p
-            className="mt-5 max-w-[54ch] text-[clamp(0.98rem,1.5vw,1.1rem)] leading-relaxed text-muted"
+            className="mt-5 max-w-[54ch] text-base leading-relaxed text-muted md:text-lg"
             data-animate="subtext"
           >
             TinyWins turns your daily actions into a living contribution map.
@@ -104,14 +107,14 @@ export default function Home() {
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Link
-              href="/weekly-demo"
+              href="/dashboard"
               className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-[0_10px_24px_-14px_#8f3616] transition hover:-translate-y-px"
               data-animate="cta"
             >
               Start tracking
             </Link>
             <Link
-              href="/weekly-demo"
+              href="/demo"
               className="rounded-full bg-accent-0 px-5 py-3 text-sm font-semibold text-foreground transition hover:-translate-y-px"
               data-animate="cta"
             >
@@ -157,7 +160,7 @@ export default function Home() {
           </div>
 
           <div
-            className="grid auto-cols-[clamp(9px,1.15vw,12px)] grid-flow-col grid-rows-7 gap-1 overflow-x-auto pb-1"
+            className="grid auto-cols-[10px] grid-flow-col grid-rows-7 gap-1 overflow-x-auto pb-1 md:auto-cols-[12px]"
             role="img"
             aria-label="Daily habit intensity heatmap"
           >
@@ -166,7 +169,7 @@ export default function Home() {
                 key={id}
                 data-square
                 data-level={level}
-                className={`h-[clamp(9px,1.15vw,12px)] w-[clamp(9px,1.15vw,12px)] rounded-[3px] border border-[#26110914] ${LEVEL_CLASSES[level]}`}
+                className={`h-[10px] w-[10px] rounded-[3px] border border-[#26110914] md:h-[12px] md:w-[12px] ${LEVEL_CLASSES[level]}`}
                 title={`${count} completions - ${LEVEL_LABELS[level]}`}
                 aria-hidden="true"
               />
