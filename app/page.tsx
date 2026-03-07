@@ -1,12 +1,20 @@
 "use client";
 
 import { useMemo, useRef } from "react";
+import Link from "next/link";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP);
 
 const LEVEL_LABELS = ["None", "Low", "Steady", "Strong", "Peak"];
+const LEVEL_CLASSES = [
+  "bg-accent-0",
+  "bg-accent-1",
+  "bg-accent-2",
+  "bg-accent-3",
+  "bg-accent-4",
+];
 
 export default function Home() {
   const scope = useRef<HTMLDivElement>(null);
@@ -38,7 +46,13 @@ export default function Home() {
         )
         .from(
           "[data-animate='cta']",
-          { y: 16, opacity: 0, duration: 0.45, stagger: 0.08 },
+          {
+            y: 16,
+            autoAlpha: 0,
+            duration: 0.45,
+            stagger: 0.08,
+            clearProps: "transform,opacity,visibility",
+          },
           "<0.05",
         )
         .from(
@@ -65,45 +79,68 @@ export default function Home() {
   );
 
   return (
-    <div className="landing" ref={scope}>
-      <div className="ambient" />
-      <main className="hero-shell">
-        <section className="hero-copy">
-          <p className="eyebrow" data-animate="headline">
+    <div className="relative isolate min-h-screen bg-background p-4 md:p-8" ref={scope}>
+      <div className="absolute inset-0 -z-10 rounded-3xl bg-linear-to-br from-[#fff0e1] via-[#fff8f2] to-[#ffeede]" />
+      <main className="mx-auto grid min-h-[calc(100vh-2rem)] max-w-[1140px] items-center gap-7 py-4 md:min-h-[calc(100vh-4rem)] md:grid-cols-[minmax(0,1fr)_minmax(320px,520px)] md:gap-14 md:py-0">
+        <section className="max-w-[560px]">
+          <p
+            className="m-0 text-[0.74rem] font-semibold uppercase tracking-[0.12em] text-muted"
+            data-animate="headline"
+          >
             TinyWins Habit Tracker
           </p>
-          <h1 className="hero-title" data-animate="headline">
+          <h1
+            className="mt-3 text-[clamp(2rem,4.6vw,4.1rem)] leading-[1.04] font-semibold tracking-[-0.03em] text-foreground"
+            data-animate="headline"
+          >
             Build streaks you can see at a glance.
           </h1>
-          <p className="hero-subtext" data-animate="subtext">
+          <p
+            className="mt-5 max-w-[54ch] text-[clamp(0.98rem,1.5vw,1.1rem)] leading-relaxed text-muted"
+            data-animate="subtext"
+          >
             TinyWins turns your daily actions into a living contribution map.
             Stay consistent, spot patterns, and keep momentum with every square.
           </p>
-          <div className="hero-actions">
-            <a href="#" className="btn-primary" data-animate="cta">
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Link
+              href="/weekly-demo"
+              className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-[0_10px_24px_-14px_#8f3616] transition hover:-translate-y-px"
+              data-animate="cta"
+            >
               Start tracking
-            </a>
-            <a href="#" className="btn-secondary" data-animate="cta">
+            </Link>
+            <Link
+              href="/weekly-demo"
+              className="rounded-full bg-accent-0 px-5 py-3 text-sm font-semibold text-foreground transition hover:-translate-y-px"
+              data-animate="cta"
+            >
               View weekly demo
-            </a>
+            </Link>
           </div>
-          <div className="hero-stats" data-animate="subtext">
-            <p>
-              <span>182</span> days tracked
+          <div className="mt-5 flex flex-wrap gap-4 text-[0.94rem] text-muted" data-animate="subtext">
+            <p className="m-0">
+              <span className="font-bold text-foreground">182</span> days tracked
             </p>
-            <p>
-              <span>86%</span> completion rate
+            <p className="m-0">
+              <span className="font-bold text-foreground">86%</span> completion rate
             </p>
           </div>
         </section>
 
-        <section className="board-card" aria-label="Habit heat map">
-          <header className="board-head">
-            <h2>Contribution-style Habit Board</h2>
-            <p>Last 26 weeks</p>
+        <section
+          className="rounded-[20px] border border-card-border bg-card/90 p-4 shadow-[0_18px_40px_-34px_#7f3d1e] md:p-6"
+          aria-label="Habit heat map"
+        >
+          <header className="mb-4 flex items-baseline justify-between gap-3">
+            <h2 className="m-0 text-[1.05rem] font-semibold">TinyWins Activity Board</h2>
+            <p className="m-0 font-mono text-xs text-muted">Last 26 weeks</p>
           </header>
 
-          <div className="month-row" aria-hidden="true">
+          <div
+            className="mb-2 ml-1 grid grid-cols-6 font-mono text-[0.72rem] text-muted md:text-xs"
+            aria-hidden="true"
+          >
             <span>Oct</span>
             <span>Nov</span>
             <span>Dec</span>
@@ -112,23 +149,34 @@ export default function Home() {
             <span>Mar</span>
           </div>
 
-          <div className="heatmap" role="img" aria-label="Daily habit intensity heatmap">
+          <div
+            className="grid auto-cols-[clamp(9px,1.15vw,12px)] grid-flow-col grid-rows-7 gap-1 overflow-x-auto pb-1"
+            role="img"
+            aria-label="Daily habit intensity heatmap"
+          >
             {activity.map(({ id, level, count }) => (
               <span
                 key={id}
                 data-square
                 data-level={level}
-                className="cell"
+                className={`h-[clamp(9px,1.15vw,12px)] w-[clamp(9px,1.15vw,12px)] rounded-[3px] border border-[#26110914] ${LEVEL_CLASSES[level]}`}
                 title={`${count} completions - ${LEVEL_LABELS[level]}`}
                 aria-hidden="true"
               />
             ))}
           </div>
 
-          <div className="legend" aria-hidden="true">
+          <div
+            className="mt-4 flex items-center justify-end gap-1.5 font-mono text-[0.72rem] text-muted md:text-xs"
+            aria-hidden="true"
+          >
             <span>Less</span>
             {[0, 1, 2, 3, 4].map((level) => (
-              <span key={level} className="cell" data-level={level} />
+              <span
+                key={level}
+                className={`h-[11px] w-[11px] rounded-[3px] border border-[#26110914] ${LEVEL_CLASSES[level]}`}
+                data-level={level}
+              />
             ))}
             <span>More</span>
           </div>
