@@ -118,7 +118,7 @@ export default function Home() {
               className="rounded-full bg-accent-0 px-5 py-3 text-sm font-semibold text-foreground transition hover:-translate-y-px"
               data-animate="cta"
             >
-              View weekly demo
+              View small demo
             </Link>
           </div>
           <div

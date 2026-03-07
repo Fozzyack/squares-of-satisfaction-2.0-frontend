@@ -29,17 +29,17 @@ body {
 }
 
 h1 {
-    @apply mt-3 text-6xl leading-[1.04] font-normal tracking-[-0.03em] text-foreground;
+    @apply text-6xl leading-[1.04] font-normal tracking-[-0.03em] text-foreground;
 }
 
 h2 {
-    @apply mt-3 text-4xl leading-[1.04] font-normal tracking-[-0.03em] text-foreground;
+    @apply text-4xl leading-[1.04] font-normal tracking-[-0.03em] text-foreground;
 }
 
 h3 {
-    @apply mt-3 text-2xl leading-[1.04] font-normal tracking-[-0.03em] text-foreground;
+    @apply text-2xl leading-[1.04] font-normal tracking-[-0.03em] text-foreground;
 }
 
 h4 {
-    @apply mt-3 text-xl leading-[1.04] font-normal tracking-[-0.03em] text-foreground;
+    @apply text-xl leading-[1.04] font-normal tracking-[-0.03em] text-foreground;
 }
