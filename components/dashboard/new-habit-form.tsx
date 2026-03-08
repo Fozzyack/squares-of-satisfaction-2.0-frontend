@@ -1,7 +1,7 @@
 "use client";
 
 import { getBackendUrl } from "@/utils/env";
-import { FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 const COLOR_OPTIONS = [
   { label: "Tangerine", value: "#c84a1b", swatchClass: "bg-[#c84a1b]" },
@@ -135,6 +135,18 @@ export function NewHabitForm() {
     }
   };
 
+  const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type } = event.target;
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    setForm((previous) => ({
+      ...previous,
+      [name]:
+        type === "number" ? (value === "" ? 0 : Number(value)) : value,
+    }));
+  };
+
   return (
     <>
       <section className="rounded-2xl border border-card-border bg-card/85 p-5 shadow-[0_10px_28px_-24px_rgba(43,22,13,0.9)] sm:p-7">
@@ -202,16 +214,10 @@ export function NewHabitForm() {
                       Habit name
                     </span>
                     <input
+                      name="name"
                       type="text"
                       value={form.name}
-                      onChange={(event) => {
-                        setErrorMsg("");
-                        setSuccessMsg("");
-                        setForm((previous) => ({
-                          ...previous,
-                          name: event.target.value,
-                        }));
-                      }}
+                      onChange={handleOnChange}
                       placeholder="Drink water"
                       className="w-full rounded-xl border border-card-border bg-white/80 px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
                       required
@@ -224,18 +230,12 @@ export function NewHabitForm() {
                       Daily goal
                     </span>
                     <input
+                      name="goal"
                       type="number"
                       min={1}
                       max={999}
                       value={form.goal}
-                      onChange={(event) => {
-                        setErrorMsg("");
-                        setSuccessMsg("");
-                        setForm((previous) => ({
-                          ...previous,
-                          goal: Number(event.target.value),
-                        }));
-                      }}
+                      onChange={handleOnChange}
                       className="w-full rounded-xl border border-card-border bg-white/80 px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
                       required
                       disabled={isSubmitting}
@@ -247,18 +247,12 @@ export function NewHabitForm() {
                       Increment
                     </span>
                     <input
+                      name="increment"
                       type="number"
                       min={1}
                       max={99}
                       value={form.increment}
-                      onChange={(event) => {
-                        setErrorMsg("");
-                        setSuccessMsg("");
-                        setForm((previous) => ({
-                          ...previous,
-                          increment: Number(event.target.value),
-                        }));
-                      }}
+                      onChange={handleOnChange}
                       className="w-full rounded-xl border border-card-border bg-white/80 px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
                       required
                       disabled={isSubmitting}
@@ -270,16 +264,10 @@ export function NewHabitForm() {
                       Unit (optional)
                     </span>
                     <input
+                      name="unit"
                       type="text"
                       value={form.unit}
-                      onChange={(event) => {
-                        setErrorMsg("");
-                        setSuccessMsg("");
-                        setForm((previous) => ({
-                          ...previous,
-                          unit: event.target.value,
-                        }));
-                      }}
+                      onChange={handleOnChange}
                       placeholder="cups"
                       className="w-full rounded-xl border border-card-border bg-white/80 px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
                       disabled={isSubmitting}
@@ -309,14 +297,7 @@ export function NewHabitForm() {
                               name="color"
                               value={option.value}
                               checked={isSelected}
-                              onChange={(event) => {
-                                setErrorMsg("");
-                                setSuccessMsg("");
-                                setForm((previous) => ({
-                                  ...previous,
-                                  color: event.target.value,
-                                }));
-                              }}
+                              onChange={handleOnChange}
                               disabled={isSubmitting}
                             />
                             <span
