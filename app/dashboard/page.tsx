@@ -1,4 +1,5 @@
 import { HabitList } from "@/components/dashboard/habit-list";
+import { NewHabitForm } from "@/components/dashboard/new-habit-form";
 
 const overviewCards = [
   { label: "Entries", value: "128" },
@@ -27,6 +28,10 @@ const DashboardPage = () => {
           ))}
         </div>
       </section>
+
+      <NewHabitForm />
+
+      <HabitList />
 
     </main>
   );
