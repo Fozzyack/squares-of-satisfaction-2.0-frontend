@@ -64,28 +64,28 @@ export default function LoginPage() {
 
     return (
         <div className="relative isolate min-h-screen bg-background p-4 md:p-8">
-            <div className="absolute inset-0 -z-10 rounded-3xl bg-linear-to-br from-[#fff0e1] via-[#fff8f2] to-[#ffeede]" />
+            <div className="auth-anim-bg absolute inset-0 -z-10 rounded-3xl bg-linear-to-br from-[#fff0e1] via-[#fff8f2] to-[#ffeede]" />
 
             <main className="mx-auto grid min-h-[calc(100vh-2rem)] w-full max-w-[1140px] items-center py-4 md:min-h-[calc(100vh-4rem)] md:py-0">
-                <div className="mx-auto w-full max-w-[430px]">
+                <div className="auth-anim-shell mx-auto w-full max-w-[430px]">
                     <Link href="/">
                         <p className="mb-4 text-sm">{"<"}- Back to Landing</p>
                     </Link>
 
-                    <section className="w-full rounded-[20px] border border-card-border bg-card/90 p-6 shadow-[0_18px_40px_-34px_#7f3d1e] md:p-7">
-                        <p className="m-0 text-[0.74rem] font-semibold uppercase tracking-[0.12em] text-muted">
+                    <section className="auth-anim-card w-full rounded-[20px] border border-card-border bg-card/90 p-6 shadow-[0_18px_40px_-34px_#7f3d1e] md:p-7">
+                        <p className="auth-anim-item auth-anim-item-1 m-0 text-[0.74rem] font-semibold uppercase tracking-[0.12em] text-muted">
                             Welcome back
                         </p>
-                        <h1 className="mt-3 text-3xl leading-tight font-medium tracking-tight text-foreground md:text-4xl">
+                        <h1 className="auth-anim-item auth-anim-item-2 mt-3 text-3xl leading-tight font-medium tracking-tight text-foreground md:text-4xl">
                             Sign in to TinyWins
                         </h1>
-                        <p className="mt-3 text-sm leading-relaxed text-muted">
+                        <p className="auth-anim-item auth-anim-item-3 mt-3 text-sm leading-relaxed text-muted">
                             Keep your streak going. Log in to view your activity
                             board and daily progress.
                         </p>
 
                         <form
-                            className="mt-6 space-y-4"
+                            className="auth-anim-item auth-anim-item-4 mt-6 space-y-4"
                             onSubmit={handleSubmit}
                         >
                             <label className="block">
@@ -143,13 +143,13 @@ export default function LoginPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-[0_10px_24px_-14px_#8f3616] transition hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+                                className="auth-anim-item auth-anim-item-5 w-full rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-[0_10px_24px_-14px_#8f3616] transition hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
                             >
                                 {loading ? "Signing in..." : "Sign in"}
                             </button>
                         </form>
 
-                        <div className="mt-3 text-sm text-muted">
+                        <div className="auth-anim-item auth-anim-item-5 mt-3 text-sm text-muted">
                             Don&apos;t have an account?{" "}
                             <Link
                                 href="/create-account"
@@ -158,7 +158,7 @@ export default function LoginPage() {
                                 Create an account
                             </Link>
                         </div>
-                        <div className="flex items-center justify-between gap-3 text-sm text-muted">
+                        <div className="auth-anim-item auth-anim-item-5 flex items-center justify-between gap-3 text-sm text-muted">
                             <Link
                                 href="#"
                                 className="transition hover:text-foreground"
