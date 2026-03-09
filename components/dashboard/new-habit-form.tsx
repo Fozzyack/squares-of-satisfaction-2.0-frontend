@@ -233,7 +233,7 @@ export function NewHabitForm() {
                       name="goal"
                       type="number"
                       min={1}
-                      max={999}
+                      max={9999}
                       value={form.goal}
                       onChange={handleOnChange}
                       className="w-full rounded-xl border border-card-border bg-white/80 px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
@@ -250,7 +250,7 @@ export function NewHabitForm() {
                       name="increment"
                       type="number"
                       min={1}
-                      max={99}
+                      max={9999}
                       value={form.increment}
                       onChange={handleOnChange}
                       className="w-full rounded-xl border border-card-border bg-white/80 px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
