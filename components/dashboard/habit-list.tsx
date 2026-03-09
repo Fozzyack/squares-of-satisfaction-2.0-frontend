@@ -1,5 +1,6 @@
 import { getBackendUrl } from "@/utils/env";
 import { cookies } from "next/headers";
+import { HabitRecordButton } from "@/components/dashboard/habit-record-button";
 
 type Habit = {
     id: string;
@@ -10,6 +11,15 @@ type Habit = {
     color: string | null;
 };
 
+type HabitDailyCount = {
+    date: string;
+    count: number;
+};
+
+type HabitWithActivity = Habit & {
+    dailyCounts: HabitDailyCount[];
+};
+
 const LEVEL_CLASSES = [
     "bg-accent-0",
     "bg-accent-1",
@@ -18,30 +28,29 @@ const LEVEL_CLASSES = [
     "bg-accent-4",
 ];
 
-const HEATMAP_DAYS = 98;
+const HEATMAP_DAYS = 365;
 const LEVEL_ALPHA = [0.16, 0.3, 0.44, 0.58, 0.72];
 
-function hashSeed(id: string) {
-    let hash = 0;
-    for (let index = 0; index < id.length; index += 1) {
-        hash = (hash << 5) - hash + id.charCodeAt(index);
-        hash |= 0;
+function mapCountToLevel(count: number, goal: number) {
+    if (count <= 0) {
+        return 0;
     }
-    return Math.abs(hash % 360) / 360;
+
+    const safeGoal = Math.max(goal, 1);
+    return Math.max(1, Math.min(4, Math.ceil((count / safeGoal) * 4)));
 }
 
-function buildHeatmap(seed: number, completion: number) {
-    return Array.from({ length: HEATMAP_DAYS }, (_, index) => {
-        const wave =
-            Math.sin(index * 0.33 + seed * 1.7) +
-            Math.cos(index * 0.11 + seed * 2.6) * 0.55 +
-            completion / 100;
-        const level = Math.max(
-            0,
-            Math.min(4, Math.floor((wave + 0.75) * 1.45)),
-        );
-        return level;
-    });
+function buildHeatmap(dailyCounts: HabitDailyCount[], goal: number) {
+    const recentCounts = dailyCounts.slice(-HEATMAP_DAYS);
+    const paddedCounts = [
+        ...Array.from(
+            { length: Math.max(0, HEATMAP_DAYS - recentCounts.length) },
+            () => ({ date: "", count: 0 }),
+        ),
+        ...recentCounts,
+    ];
+
+    return paddedCounts.map((entry) => mapCountToLevel(entry.count, goal));
 }
 
 function hexToRgba(hex: string, alpha: number) {
@@ -61,15 +70,16 @@ function hexToRgba(hex: string, alpha: number) {
     return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 }
 
-function HabitListItem({ habit }: { habit: Habit }) {
+function HabitListItem({ habit }: { habit: HabitWithActivity }) {
+    const todayCount = habit.dailyCounts.at(-1)?.count ?? 0;
     const completion = Math.max(
         0,
         Math.min(
             100,
-            Math.round((habit.increment / Math.max(habit.goal, 1)) * 100),
+            Math.round((todayCount / Math.max(habit.goal, 1)) * 100),
         ),
     );
-    const activity = buildHeatmap(hashSeed(habit.id), completion);
+    const activity = buildHeatmap(habit.dailyCounts, habit.goal);
     const goalSuffix = habit.unit ? ` ${habit.unit}` : "";
 
     return (
@@ -85,7 +95,7 @@ function HabitListItem({ habit }: { habit: Habit }) {
                     </p>
                 </div>
                 <span className="rounded-full bg-accent-2/35 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-foreground">
-                    +{habit.increment}
+                    Today: {todayCount}
                     {goalSuffix}
                 </span>
             </div>
@@ -113,27 +123,37 @@ function HabitListItem({ habit }: { habit: Habit }) {
             </div>
             <div className="mt-3 flex items-center justify-between gap-2 text-sm text-muted">
                 <p>Progress increments toward goal</p>
-                <p className="font-mono text-xs uppercase tracking-[0.12em]">
-                    {completion}% of goal
-                </p>
+                <div className="flex items-center gap-3">
+                    <p className="font-mono text-xs uppercase tracking-[0.12em]">
+                        Today: {completion}% of goal
+                    </p>
+                    <HabitRecordButton
+                        habitId={habit.id}
+                        increment={habit.increment}
+                        unit={habit.unit}
+                        color={habit.color}
+                    />
+                </div>
             </div>
         </li>
     );
 }
 
-async function getHabits() {
+async function getHabitsWithActivity() {
     const cookieStore = await cookies();
     const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME ?? "tiny-wins";
     const sessionCookie = cookieStore.get(cookieName);
 
     if (!sessionCookie) {
-        return [] as Habit[];
+        return [] as HabitWithActivity[];
     }
+
+    const cookieHeader = `${sessionCookie.name}=${sessionCookie.value}`;
 
     const response = await fetch(`${getBackendUrl()}/habits`, {
         cache: "no-store",
         headers: {
-            Cookie: `${sessionCookie.name}=${sessionCookie.value}`,
+            Cookie: cookieHeader,
         },
     });
 
@@ -142,15 +162,52 @@ async function getHabits() {
         throw new Error(data.error ?? "Failed to fetch habits");
     }
 
-    return data as Habit[];
+    const habits = data as Habit[];
+
+    const habitsWithActivity = await Promise.all(
+        habits.map(async (habit) => {
+            try {
+                const recordsResponse = await fetch(
+                    `${getBackendUrl()}/habits/${habit.id}/records`,
+                    {
+                        cache: "no-store",
+                        headers: {
+                            Cookie: cookieHeader,
+                        },
+                    },
+                );
+
+                if (!recordsResponse.ok) {
+                    return {
+                        ...habit,
+                        dailyCounts: [] as HabitDailyCount[],
+                    };
+                }
+
+                const dailyCounts = (await recordsResponse.json()) as HabitDailyCount[];
+
+                return {
+                    ...habit,
+                    dailyCounts,
+                };
+            } catch {
+                return {
+                    ...habit,
+                    dailyCounts: [] as HabitDailyCount[],
+                };
+            }
+        }),
+    );
+
+    return habitsWithActivity;
 }
 
 export async function HabitList() {
-    let habits: Habit[] = [];
+    let habits: HabitWithActivity[] = [];
     let fetchError = false;
 
     try {
-        habits = await getHabits();
+        habits = await getHabitsWithActivity();
     } catch {
         fetchError = true;
     }
