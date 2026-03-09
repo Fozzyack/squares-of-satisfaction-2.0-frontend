@@ -135,6 +135,24 @@ function HabitListItem({ habit }: { habit: HabitWithActivity }) {
                     />
                 </div>
             </div>
+            <div className="mt-2 space-y-2">
+                <div className="flex items-center justify-between text-xs text-muted">
+                    <p>
+                        {todayCount} / {habit.goal}
+                        {goalSuffix}
+                    </p>
+                    <p>{completion}% complete</p>
+                </div>
+                <div className="h-2 w-full rounded-full bg-accent-0">
+                    <div
+                        className="h-2 rounded-full transition-all"
+                        style={{
+                            width: `${completion}%`,
+                            backgroundColor: habit.color ?? "var(--color-accent-3)",
+                        }}
+                    />
+                </div>
+            </div>
         </li>
     );
 }
