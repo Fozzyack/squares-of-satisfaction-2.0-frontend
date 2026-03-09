@@ -3,10 +3,22 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
+  const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME ?? "tiny-wins";
+
+  const handleLogout = async () => {
+    "use server";
+
+    const cookieStore = await cookies();
+    cookieStore.set(cookieName, "", {
+      path: "/",
+      expires: new Date(0),
+    });
+
+    redirect("/login");
+  };
+
   const cookieStore = await cookies();
-  const cookie = cookieStore.get(
-    process.env.NEXT_PUBLIC_COOKIE_NAME ?? "tiny-wins",
-  );
+  const cookie = cookieStore.get(cookieName);
   let data;
   if (!cookie) {
     redirect("/login");
@@ -36,9 +48,19 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
             </p>
             <h2 className="mt-1 text-3xl sm:text-4xl">Welcome back, {data.name}</h2>
           </div>
-          <p className="mb-1 hidden font-mono text-xs uppercase tracking-[0.16em] text-[var(--color-muted)] sm:block">
-            TinyWins
-          </p>
+          <div className="mb-1 flex items-center gap-3">
+            <p className="hidden font-mono text-xs uppercase tracking-[0.16em] text-[var(--color-muted)] sm:block">
+              TinyWins
+            </p>
+            <form action={handleLogout}>
+              <button
+                type="submit"
+                className="rounded-full border border-[var(--color-card-border)] bg-[var(--color-background)]/70 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--color-muted)] transition hover:text-[var(--color-foreground)]"
+              >
+                Logout
+              </button>
+            </form>
+          </div>
         </div>
       </header>
       {children}
