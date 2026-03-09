@@ -5,7 +5,7 @@ Next.js app for the habit tracker dashboard.
 ![Tiny Wins Landing](./tinywinslanding.png)
 
 ![Tiny Wins Demo](./output.gif)
-
+(Landing and login - will post dashboard when done)
 ## Stack
 
 - Next.js App Router
