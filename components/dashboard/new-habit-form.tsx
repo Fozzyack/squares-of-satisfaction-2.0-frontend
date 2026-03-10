@@ -132,6 +132,7 @@ export function NewHabitForm() {
       setErrorMsg("Unable to reach the server. Please try again.");
     } finally {
       setIsSubmitting(false);
+      window.location.href = "/dashboard";
     }
   };
 
