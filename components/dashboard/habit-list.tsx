@@ -20,6 +20,12 @@ type HabitWithActivity = Habit & {
     dailyCounts: HabitDailyCount[];
 };
 
+type HeatmapDay = {
+    date: string;
+    count: number;
+    level: number;
+};
+
 const LEVEL_CLASSES = [
     "bg-accent-0",
     "bg-accent-1",
@@ -40,17 +46,43 @@ function mapCountToLevel(count: number, goal: number) {
     return Math.max(1, Math.min(4, Math.ceil((count / safeGoal) * 4)));
 }
 
-function buildHeatmap(dailyCounts: HabitDailyCount[], goal: number) {
-    const recentCounts = dailyCounts.slice(-HEATMAP_DAYS);
-    const paddedCounts = [
-        ...Array.from(
-            { length: Math.max(0, HEATMAP_DAYS - recentCounts.length) },
-            () => ({ date: "", count: 0 }),
-        ),
-        ...recentCounts,
-    ];
+function toDateKey(date: Date) {
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(date.getUTCDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+}
 
-    return paddedCounts.map((entry) => mapCountToLevel(entry.count, goal));
+function toDayMonthLabel(dateKey: string) {
+    const date = new Date(`${dateKey}T00:00:00Z`);
+    if (Number.isNaN(date.getTime())) {
+        return dateKey;
+    }
+
+    return `${date.getUTCDate()} ${date.toLocaleString("en-US", {
+        month: "long",
+        timeZone: "UTC",
+    })}`;
+}
+
+function buildHeatmap(dailyCounts: HabitDailyCount[], goal: number) {
+    const countByDay = new Map(
+        dailyCounts.map((entry) => [entry.date.slice(0, 10), entry.count]),
+    );
+    const today = new Date();
+
+    return Array.from({ length: HEATMAP_DAYS }, (_, index): HeatmapDay => {
+        const date = new Date(today);
+        date.setUTCDate(today.getUTCDate() - (HEATMAP_DAYS - 1 - index));
+        const dateKey = toDateKey(date);
+        const count = countByDay.get(dateKey) ?? 0;
+
+        return {
+            date: dateKey,
+            count,
+            level: mapCountToLevel(count, goal),
+        };
+    });
 }
 
 function hexToRgba(hex: string, alpha: number) {
@@ -108,17 +140,19 @@ function HabitListItem({ habit }: { habit: HabitWithActivity }) {
                 role="img"
                 aria-label={`${habit.name} activity intensity heatmap`}
             >
-                {activity.map((level, index) => (
+                {activity.map((entry, index) => (
                     (() => {
                         const squareColor = habit.color
-                            ? hexToRgba(habit.color, LEVEL_ALPHA[level])
+                            ? hexToRgba(habit.color, LEVEL_ALPHA[entry.level])
                             : null;
+                        const unitLabel = habit.unit ?? "times";
 
                         return (
                             <div
                                 key={`${habit.id}-${index}`}
-                                className={`h-[10px] w-[10px] rounded-[3px] border border-card-border/70 md:h-[12px] md:w-[12px] ${squareColor ? "" : LEVEL_CLASSES[level]}`}
+                                className={`h-[10px] w-[10px] rounded-[3px] border border-card-border/70 transition-transform duration-150 ease-out hover:scale-125 md:h-[12px] md:w-[12px] ${squareColor ? "" : LEVEL_CLASSES[entry.level]}`}
                                 style={squareColor ? { backgroundColor: squareColor } : undefined}
+                                title={`${entry.count} ${unitLabel} on ${toDayMonthLabel(entry.date)}`}
                                 aria-hidden="true"
                             />
                         );
