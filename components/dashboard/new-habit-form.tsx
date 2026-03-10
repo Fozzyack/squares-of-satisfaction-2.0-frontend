@@ -149,7 +149,10 @@ export function NewHabitForm() {
 
   return (
     <>
-      <section className="rounded-2xl border border-card-border bg-card/85 p-5 shadow-[0_10px_28px_-24px_rgba(43,22,13,0.9)] sm:p-7">
+      <section
+        data-dashboard-section
+        className="rounded-2xl border border-card-border bg-card/85 p-5 shadow-[0_10px_28px_-24px_rgba(43,22,13,0.9)] sm:p-7"
+      >
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted">

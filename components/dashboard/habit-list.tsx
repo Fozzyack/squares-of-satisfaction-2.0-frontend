@@ -83,7 +83,10 @@ function HabitListItem({ habit }: { habit: HabitWithActivity }) {
     const goalSuffix = habit.unit ? ` ${habit.unit}` : "";
 
     return (
-        <li className="rounded-xl border border-card-border bg-background/65 px-4 py-3">
+        <li
+            data-habit-item
+            className="rounded-xl border border-card-border bg-background/65 px-4 py-3"
+        >
             <div className="flex items-start justify-between gap-3">
                 <div>
                     <p className="text-[15px] leading-tight text-foreground">
@@ -100,6 +103,7 @@ function HabitListItem({ habit }: { habit: HabitWithActivity }) {
                 </span>
             </div>
             <div
+                data-habit-grid
                 className="mt-3 grid auto-cols-[10px] grid-flow-col grid-rows-7 gap-1 overflow-x-auto pb-1 md:auto-cols-[12px]"
                 role="img"
                 aria-label={`${habit.name} activity intensity heatmap`}
@@ -111,7 +115,7 @@ function HabitListItem({ habit }: { habit: HabitWithActivity }) {
                             : null;
 
                         return (
-                            <span
+                            <div
                                 key={`${habit.id}-${index}`}
                                 className={`h-[10px] w-[10px] rounded-[3px] border border-card-border/70 md:h-[12px] md:w-[12px] ${squareColor ? "" : LEVEL_CLASSES[level]}`}
                                 style={squareColor ? { backgroundColor: squareColor } : undefined}
@@ -231,7 +235,10 @@ export async function HabitList() {
     }
 
     return (
-        <section className="rounded-2xl border border-card-border bg-card/85 p-5 sm:p-7">
+        <section
+            data-dashboard-section
+            className="rounded-2xl border border-card-border bg-card/85 p-5 sm:p-7"
+        >
             <div className="flex items-center justify-between gap-4">
                 <h3 className="text-2xl">Habits</h3>
                 <span className="rounded-full bg-accent-1/50 px-3 py-1 font-mono text-xs uppercase tracking-[0.16em] text-foreground">
