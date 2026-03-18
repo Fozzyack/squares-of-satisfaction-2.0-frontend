@@ -4,6 +4,7 @@ import { HabitRecordButton } from "@/components/dashboard/habit-record-button";
 import { getBackendUrl } from "@/utils/env";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 import type { HabitWithActivity } from "@/components/dashboard/habit-list";
 
 type HabitLog = {
@@ -239,12 +240,14 @@ function HabitListItem({
 }
 
 export function HabitListClient({ habits }: HabitListClientProps) {
+  const router = useRouter();
   const [selectedHabit, setSelectedHabit] = useState<HabitWithActivity | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [settingsHabit, setSettingsHabit] = useState<HabitWithActivity | null>(null);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isDeletingHabit, setIsDeletingHabit] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
   const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
   const [logs, setLogs] = useState<HabitLog[]>([]);
   const [isLoadingLogs, setIsLoadingLogs] = useState(false);
@@ -373,10 +376,15 @@ export function HabitListClient({ habits }: HabitListClientProps) {
 
   const openSettingsModal = (habit: HabitWithActivity) => {
     setSettingsHabit(habit);
+    setDeleteError("");
     setIsSettingsModalOpen(true);
   };
 
   const closeSettingsModal = () => {
+    if (isDeletingHabit) {
+      return;
+    }
+
     setIsSettingsModalOpen(false);
   };
 
@@ -386,8 +394,33 @@ export function HabitListClient({ habits }: HabitListClientProps) {
     }
 
     setIsDeletingHabit(true);
-    console.log("Delete habit", habitId);
-    closeSettingsModal();
+    setDeleteError("");
+
+    let didDelete = false;
+
+    try {
+      const response = await fetch(`${getBackendUrl()}/habits/${habitId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        setDeleteError(data?.error ?? "Could not delete habit");
+        return;
+      }
+
+      didDelete = true;
+    } catch {
+      setDeleteError("Could not reach server");
+    } finally {
+      setIsDeletingHabit(false);
+
+      if (didDelete) {
+        setIsSettingsModalOpen(false);
+        router.refresh();
+      }
+    }
   };
 
   return (
@@ -443,6 +476,7 @@ export function HabitListClient({ habits }: HabitListClientProps) {
               <button
                 type="button"
                 onClick={closeSettingsModal}
+                disabled={isDeletingHabit}
                 className="rounded-full border border-card-border bg-background/70 px-4 py-2 text-sm text-foreground transition hover:bg-background"
               >
                 Cancel
@@ -456,6 +490,11 @@ export function HabitListClient({ habits }: HabitListClientProps) {
                 {isDeletingHabit ? "Deleting..." : "Delete habit"}
               </button>
             </div>
+            {deleteError ? (
+              <p className="mt-3 rounded-xl border border-[#efc2a8] bg-[#ffe6d9] px-3 py-2 text-sm text-[#8d3212]" role="alert">
+                {deleteError}
+              </p>
+            ) : null}
           </section>
         </div>
       ) : null}
