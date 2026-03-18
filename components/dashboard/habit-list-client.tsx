@@ -132,9 +132,14 @@ type HabitListClientProps = {
 type HabitListItemProps = {
   habit: HabitWithActivity;
   onSquareClick: (habit: HabitWithActivity, date: string) => void;
+  onSettingsClick: (habit: HabitWithActivity) => void;
 };
 
-function HabitListItem({ habit, onSquareClick }: HabitListItemProps) {
+function HabitListItem({
+  habit,
+  onSquareClick,
+  onSettingsClick,
+}: HabitListItemProps) {
   const todayCount = habit.dailyCounts.at(-1)?.count ?? 0;
   const completion = Math.max(
     0,
@@ -156,10 +161,19 @@ function HabitListItem({ habit, onSquareClick }: HabitListItemProps) {
             {goalSuffix}
           </p>
         </div>
-        <span className="rounded-full bg-accent-2/35 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-foreground">
-          Today: {todayCount}
-          {goalSuffix}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="rounded-full bg-accent-2/35 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-foreground">
+            Today: {todayCount}
+            {goalSuffix}
+          </span>
+          <button
+            type="button"
+            onClick={() => onSettingsClick(habit)}
+            className="rounded-lg border border-card-border bg-background/70 px-2.5 py-1 text-xs text-foreground transition hover:bg-background"
+          >
+            Delete
+          </button>
+        </div>
       </div>
 
       <div
@@ -228,6 +242,9 @@ export function HabitListClient({ habits }: HabitListClientProps) {
   const [selectedHabit, setSelectedHabit] = useState<HabitWithActivity | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [settingsHabit, setSettingsHabit] = useState<HabitWithActivity | null>(null);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isDeletingHabit, setIsDeletingHabit] = useState(false);
   const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
   const [logs, setLogs] = useState<HabitLog[]>([]);
   const [isLoadingLogs, setIsLoadingLogs] = useState(false);
@@ -318,6 +335,61 @@ export function HabitListClient({ habits }: HabitListClientProps) {
     };
   }, [selectedHabit, selectedDate]);
 
+  useEffect(() => {
+    if (!isSettingsModalOpen) {
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsSettingsModalOpen(false);
+      }
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isSettingsModalOpen]);
+
+  useEffect(() => {
+    if (isSettingsModalOpen) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setSettingsHabit(null);
+      setIsDeletingHabit(false);
+    }, 120);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [isSettingsModalOpen]);
+
+  const openSettingsModal = (habit: HabitWithActivity) => {
+    setSettingsHabit(habit);
+    setIsSettingsModalOpen(true);
+  };
+
+  const closeSettingsModal = () => {
+    setIsSettingsModalOpen(false);
+  };
+
+  const handleDeleteHabit = async (habitId: string) => {
+    if (isDeletingHabit) {
+      return;
+    }
+
+    setIsDeletingHabit(true);
+    console.log("Delete habit", habitId);
+    closeSettingsModal();
+  };
+
   return (
     <>
       <ul className="mt-5 space-y-3">
@@ -330,9 +402,63 @@ export function HabitListClient({ habits }: HabitListClientProps) {
               setSelectedDate(date);
               setIsDrawerOpen(true);
             }}
+            onSettingsClick={openSettingsModal}
           />
         ))}
       </ul>
+
+      {settingsHabit && isSettingsModalOpen ? (
+        <div
+          className="fixed inset-0 z-[120] flex items-start justify-center bg-[#2b160d]/40 p-4 pt-10 backdrop-blur-sm sm:items-center sm:pt-4"
+          onClick={closeSettingsModal}
+        >
+          <section
+            className="w-full max-w-md rounded-2xl border border-card-border bg-card p-5 shadow-[0_28px_58px_-28px_rgba(43,22,13,0.88)] sm:p-6"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Settings for ${settingsHabit.name}`}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+                  Habit settings
+                </p>
+                <h4 className="mt-2 text-xl text-foreground">{settingsHabit.name}</h4>
+              </div>
+              <button
+                type="button"
+                onClick={closeSettingsModal}
+                className="rounded-full border border-card-border bg-background/70 px-3 py-1.5 text-xs font-mono uppercase tracking-[0.12em] text-muted transition hover:text-foreground"
+              >
+                Close
+              </button>
+            </div>
+
+            <p className="mt-4 text-sm text-muted">
+              Delete permanently removes this habit and all of its history.
+            </p>
+
+            <div className="mt-5 flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={closeSettingsModal}
+                className="rounded-full border border-card-border bg-background/70 px-4 py-2 text-sm text-foreground transition hover:bg-background"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDeleteHabit(settingsHabit.id)}
+                disabled={isDeletingHabit}
+                className="rounded-full bg-[#8d3212] px-5 py-2 text-sm font-semibold text-white transition hover:-translate-y-px hover:bg-[#7a2c10] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+              >
+                {isDeletingHabit ? "Deleting..." : "Delete habit"}
+              </button>
+            </div>
+          </section>
+        </div>
+      ) : null}
 
       {selectedHabit && selectedDate && portalRoot
         ? createPortal(
