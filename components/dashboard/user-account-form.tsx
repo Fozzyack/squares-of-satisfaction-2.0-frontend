@@ -1,7 +1,8 @@
 "use client";
 
 import { getBackendUrl } from "@/utils/env";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Settings } from "lucide-react";
 
@@ -23,15 +24,20 @@ const DEFAULT_FIELDS: UpdateUserFormFields = {
     currentPassword: "",
 };
 
+const DELETE_REDIRECT_DELAY_MS = 2000;
+
 export function UserAccountDialog({ userData }: UserAccountDialogProps) {
+    const router = useRouter();
     const [form, setForm] = useState<UpdateUserFormFields>(DEFAULT_FIELDS);
     const [isOpen, setIsOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+    const [isDeleteRedirecting, setIsDeleteRedirecting] = useState(false);
     const [deleteErrorMsg, setDeleteErrorMsg] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const [successMsg, setSuccessMsg] = useState("");
+    const deleteRedirectTimeoutRef = useRef<number | null>(null);
 
     useEffect(() => {
         if (!isOpen) {
@@ -41,7 +47,7 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
         const onKeyDown = (event: KeyboardEvent) => {
             if (event.key === "Escape") {
                 if (isDeleteModalOpen) {
-                    if (!isDeletingAccount) {
+                    if (!isDeletingAccount && !isDeleteRedirecting) {
                         setIsDeleteModalOpen(false);
                         setDeleteErrorMsg("");
                     }
@@ -62,7 +68,15 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
             document.body.style.overflow = previousOverflow;
             window.removeEventListener("keydown", onKeyDown);
         };
-    }, [isOpen, isDeleteModalOpen, isDeletingAccount]);
+    }, [isOpen, isDeleteModalOpen, isDeleteRedirecting, isDeletingAccount]);
+
+    useEffect(() => {
+        return () => {
+            if (deleteRedirectTimeoutRef.current !== null) {
+                window.clearTimeout(deleteRedirectTimeoutRef.current);
+            }
+        };
+    }, []);
 
     const handleOpen = () => {
         setForm({
@@ -71,6 +85,7 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
             currentPassword: "",
         });
         setIsDeleteModalOpen(false);
+        setIsDeleteRedirecting(false);
         setDeleteErrorMsg("");
         setErrorMsg("");
         setSuccessMsg("");
@@ -78,7 +93,7 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
     };
 
     const handleClose = () => {
-        if (isDeletingAccount) {
+        if (isDeletingAccount || isDeleteRedirecting) {
             return;
         }
 
@@ -89,13 +104,17 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
     };
 
     const openDeleteModal = () => {
+        if (isDeletingAccount || isDeleteRedirecting) {
+            return;
+        }
+
         setDeleteErrorMsg("");
         setSuccessMsg("");
         setIsDeleteModalOpen(true);
     };
 
     const closeDeleteModal = () => {
-        if (isDeletingAccount) {
+        if (isDeletingAccount || isDeleteRedirecting) {
             return;
         }
 
@@ -104,7 +123,7 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
     };
 
     const handleDeleteAccount = async () => {
-        if (isDeletingAccount) {
+        if (isDeletingAccount || isDeleteRedirecting) {
             return;
         }
 
@@ -113,13 +132,10 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
         setSuccessMsg("");
 
         try {
-            const response = await fetch(
-                `${getBackendUrl()}/users/${userData.name}`,
-                {
-                    method: "DELETE",
-                    credentials: "include",
-                },
-            );
+            const response = await fetch(`${getBackendUrl()}/users`, {
+                method: "DELETE",
+                credentials: "include",
+            });
 
             if (!response.ok) {
                 const data = await response.json().catch(() => null);
@@ -132,11 +148,11 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
             setSuccessMsg(
                 "Account deleted successfully. Redirecting to homepage...",
             );
-            setIsDeleteModalOpen(false);
-            setIsOpen(false);
-            setTimeout(() => {
-                window.location.href = "/";
-            }, 2000);
+            setIsDeleteRedirecting(true);
+            deleteRedirectTimeoutRef.current = window.setTimeout(() => {
+                deleteRedirectTimeoutRef.current = null;
+                router.replace("/");
+            }, DELETE_REDIRECT_DELAY_MS);
         } catch {
             setDeleteErrorMsg("Unable to reach the server. Please try again.");
         } finally {
@@ -151,22 +167,19 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
         setSuccessMsg("");
 
         try {
-            const response = await fetch(
-                `${getBackendUrl()}/users/${userData.name}`,
-                {
-                    method: "PUT",
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    // conditionally add fields to the request body if they are not empty
-                    body: JSON.stringify({
-                        name: form.name || undefined,
-                        newPassword: form.newPassword || undefined,
-                        currentPassword: form.currentPassword,
-                    }),
+            const response = await fetch(`${getBackendUrl()}/users`, {
+                method: "PUT",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
                 },
-            );
+                // conditionally add fields to the request body if they are not empty
+                body: JSON.stringify({
+                    name: form.name || undefined,
+                    newPassword: form.newPassword || undefined,
+                    currentPassword: form.currentPassword,
+                }),
+            });
 
             const data = await response.json();
 
@@ -179,8 +192,12 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
             }
 
             setSuccessMsg("Account settings updated successfully.");
-            setIsOpen(false);
-            window.location.href = "/dashboard";
+            setForm((previous) => ({
+                ...previous,
+                newPassword: "",
+                currentPassword: "",
+            }));
+            router.refresh();
         } catch {
             setErrorMsg("Unable to reach the server. Please try again.");
         } finally {
@@ -295,7 +312,11 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
                                         <div className="flex items-center gap-7">
                                             <button
                                                 type="submit"
-                                                disabled={isSubmitting}
+                                                disabled={
+                                                    isSubmitting ||
+                                                    isDeletingAccount ||
+                                                    isDeleteRedirecting
+                                                }
                                                 className="self-start rounded-full border border-card-border bg-background/70 px-3 py-1.5 text-xs font-mono uppercase tracking-[0.12em] text-muted transition hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                                             >
                                                 {isSubmitting
@@ -304,7 +325,11 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
                                             </button>
                                             <button
                                                 type="button"
-                                                disabled={isSubmitting}
+                                                disabled={
+                                                    isSubmitting ||
+                                                    isDeletingAccount ||
+                                                    isDeleteRedirecting
+                                                }
                                                 className="self-end rounded-full border border-red-500 bg-red-500/10 px-3 py-1.5 text-xs font-mono uppercase tracking-[0.12em] text-red-500 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-50"
                                                 onClick={openDeleteModal}
                                             >
@@ -317,8 +342,11 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
                                             {errorMsg}
                                         </p>
                                     )}
-                                    {successMsg && (
-                                        <p className="mt-4 text-sm text-green-500">
+                                    {successMsg && !isDeleteModalOpen && (
+                                        <p
+                                            className="mt-4 text-sm text-green-500"
+                                            role="status"
+                                        >
                                             {successMsg}
                                         </p>
                                     )}
@@ -354,6 +382,7 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
                                 <button
                                     type="button"
                                     onClick={closeDeleteModal}
+                                    disabled={isDeletingAccount || isDeleteRedirecting}
                                     className="rounded-full border border-card-border bg-background/70 px-3 py-1.5 text-xs font-mono uppercase tracking-[0.12em] text-muted transition hover:text-foreground"
                                 >
                                     Close
@@ -369,20 +398,22 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
                                 <button
                                     type="button"
                                     onClick={closeDeleteModal}
-                                    disabled={isDeletingAccount}
-                                    className="rounded-full border border-card-border bg-background/70 px-4 py-2 text-sm text-foreground transition hover:bg-background"
+                                    disabled={isDeletingAccount || isDeleteRedirecting}
+                                    className="rounded-full border border-card-border bg-background/70 px-4 py-2 text-sm text-foreground transition hover:bg-background disabled:cursor-not-allowed disabled:opacity-50"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="button"
                                     onClick={handleDeleteAccount}
-                                    disabled={isDeletingAccount}
+                                    disabled={isDeletingAccount || isDeleteRedirecting}
                                     className="rounded-full bg-[#8d3212] px-5 py-2 text-sm font-semibold text-white transition hover:-translate-y-px hover:bg-[#7a2c10] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
                                 >
                                     {isDeletingAccount
                                         ? "Deleting..."
-                                        : "Delete account"}
+                                        : isDeleteRedirecting
+                                          ? "Redirecting..."
+                                          : "Delete account"}
                                 </button>
                             </div>
                             {deleteErrorMsg ? (
@@ -391,6 +422,14 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
                                     role="alert"
                                 >
                                     {deleteErrorMsg}
+                                </p>
+                            ) : null}
+                            {successMsg ? (
+                                <p
+                                    className="mt-3 rounded-xl border border-[#b7decb] bg-[#e9f8ef] px-3 py-2 text-sm text-[#1f6d46]"
+                                    role="status"
+                                >
+                                    {successMsg}
                                 </p>
                             ) : null}
                         </section>
