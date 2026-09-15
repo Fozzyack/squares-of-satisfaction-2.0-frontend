@@ -1,39 +1,39 @@
 @import "tailwindcss";
 
 @theme {
-    --color-background: #fff4ea;
-    --color-foreground: #2b160d;
-    --color-primary: #c84a1b;
-    --color-primary-foreground: #fff8f3;
-    --color-muted: #7d4f37;
-    --color-card: #fff9f4;
-    --color-card-border: #efd0b6;
-    --color-input: #fffdfb;
-    --color-overlay: rgba(43, 22, 13, 0.4);
-    --color-success-background: #e9f8ef;
-    --color-success-border: #b7decb;
-    --color-success-foreground: #1f6d46;
-    --color-danger: #8d3212;
-    --color-danger-hover: #7a2c10;
-    --color-danger-background: #ffe6d9;
-    --color-danger-border: #efc2a8;
-    --color-danger-foreground: #8d3212;
-    --color-heatmap-border: rgba(38, 17, 9, 0.08);
-    --color-gradient-start: #fff0e1;
-    --color-gradient-mid: #fff8f2;
-    --color-gradient-end: #ffeede;
-    --color-glow-a: #ffe4cf;
-    --color-glow-b: #ffd5bd;
-    --color-accent-0: #f8e6d8;
-    --color-accent-1: #f5c6a5;
-    --color-accent-2: #ef9b6d;
-    --color-accent-3: #e3713f;
-    --color-accent-4: #c84a1b;
-    --shadow-button: 0 10px 24px -14px rgba(143, 54, 22, 0.9);
-    --shadow-card: 0 18px 40px -34px rgba(127, 61, 30, 0.9);
-    --shadow-section: 0 10px 28px -24px rgba(43, 22, 13, 0.9);
-    --shadow-modal: 0 28px 58px -28px rgba(43, 22, 13, 0.88);
-    --shadow-drawer: -12px 0 28px -20px rgba(43, 22, 13, 0.85);
+    --color-background: #f6f3ef;
+    --color-foreground: #241f1c;
+    --color-primary: #c65338;
+    --color-primary-foreground: #fffaf7;
+    --color-muted: #756a63;
+    --color-card: #fffdfb;
+    --color-card-border: #e5ddd6;
+    --color-input: #ffffff;
+    --color-overlay: rgba(36, 31, 28, 0.42);
+    --color-success-background: #e8f3ec;
+    --color-success-border: #b8d7c1;
+    --color-success-foreground: #2e6848;
+    --color-danger: #b7462f;
+    --color-danger-hover: #963923;
+    --color-danger-background: #fbe9e4;
+    --color-danger-border: #e7b9ad;
+    --color-danger-foreground: #8d3325;
+    --color-heatmap-border: rgba(36, 31, 28, 0.08);
+    --color-gradient-start: #f7efe7;
+    --color-gradient-mid: #fffdfb;
+    --color-gradient-end: #f2e9df;
+    --color-glow-a: #efe2d5;
+    --color-glow-b: #e5d8cd;
+    --color-accent-0: #eee8e1;
+    --color-accent-1: #e6c7b6;
+    --color-accent-2: #db9b7d;
+    --color-accent-3: #cf7053;
+    --color-accent-4: #c65338;
+    --shadow-button: 0 10px 24px -14px rgba(151, 57, 35, 0.55);
+    --shadow-card: 0 18px 40px -34px rgba(74, 49, 35, 0.5);
+    --shadow-section: 0 10px 28px -24px rgba(74, 49, 35, 0.42);
+    --shadow-modal: 0 28px 58px -28px rgba(53, 39, 31, 0.48);
+    --shadow-drawer: -12px 0 28px -20px rgba(53, 39, 31, 0.42);
     --font-sans: var(--font-space-grotesk);
     --font-mono: var(--font-ibm-plex-mono);
 }
@@ -44,39 +44,39 @@
 
 :root[data-theme="dark"] {
     color-scheme: dark;
-    --color-background: #1b120e;
-    --color-foreground: #fff4ea;
-    --color-primary: #f07a42;
-    --color-primary-foreground: #21120b;
-    --color-muted: #c5a18c;
-    --color-card: #261914;
-    --color-card-border: #5a392a;
-    --color-input: #2d1e18;
-    --color-overlay: rgba(5, 3, 2, 0.68);
-    --color-success-background: #173526;
-    --color-success-border: #3d7859;
-    --color-success-foreground: #a9e5c2;
-    --color-danger: #b95637;
-    --color-danger-hover: #d26945;
-    --color-danger-background: #452116;
-    --color-danger-border: #9b4d31;
-    --color-danger-foreground: #ffb59a;
-    --color-heatmap-border: rgba(255, 244, 234, 0.12);
-    --color-gradient-start: #301d15;
-    --color-gradient-mid: #211511;
-    --color-gradient-end: #1b120e;
-    --color-glow-a: #3b2117;
-    --color-glow-b: #452116;
-    --color-accent-0: #352119;
-    --color-accent-1: #6b3925;
-    --color-accent-2: #a95531;
-    --color-accent-3: #d76a38;
-    --color-accent-4: #f07a42;
-    --shadow-button: 0 10px 24px -14px rgba(240, 122, 66, 0.65);
-    --shadow-card: 0 18px 40px -34px rgba(0, 0, 0, 0.9);
-    --shadow-section: 0 10px 28px -24px rgba(0, 0, 0, 0.9);
-    --shadow-modal: 0 28px 58px -28px rgba(0, 0, 0, 0.95);
-    --shadow-drawer: -12px 0 28px -20px rgba(0, 0, 0, 0.9);
+    --color-background: #141515;
+    --color-foreground: #f5f1ec;
+    --color-primary: #f28a67;
+    --color-primary-foreground: #241512;
+    --color-muted: #a9a5a0;
+    --color-card: #1e2020;
+    --color-card-border: #363a39;
+    --color-input: #252827;
+    --color-overlay: rgba(5, 6, 6, 0.72);
+    --color-success-background: #1a3227;
+    --color-success-border: #3d7055;
+    --color-success-foreground: #a6d8b7;
+    --color-danger: #e4785d;
+    --color-danger-hover: #f08d72;
+    --color-danger-background: #3c211b;
+    --color-danger-border: #865044;
+    --color-danger-foreground: #ffb9a8;
+    --color-heatmap-border: rgba(245, 241, 236, 0.12);
+    --color-gradient-start: #24201d;
+    --color-gradient-mid: #191a1a;
+    --color-gradient-end: #141515;
+    --color-glow-a: #2d2420;
+    --color-glow-b: #22282a;
+    --color-accent-0: #28302e;
+    --color-accent-1: #4a493b;
+    --color-accent-2: #8c614b;
+    --color-accent-3: #c06b50;
+    --color-accent-4: #f28a67;
+    --shadow-button: 0 10px 24px -14px rgba(242, 138, 103, 0.55);
+    --shadow-card: 0 18px 40px -34px rgba(0, 0, 0, 0.85);
+    --shadow-section: 0 10px 28px -24px rgba(0, 0, 0, 0.8);
+    --shadow-modal: 0 28px 58px -28px rgba(0, 0, 0, 0.92);
+    --shadow-drawer: -12px 0 28px -20px rgba(0, 0, 0, 0.86);
 }
 
 body {
@@ -84,10 +84,7 @@ body {
     font-family: var(--font-space-grotesk), sans-serif;
     min-height: 100vh;
     margin: 0;
-    background:
-        radial-gradient(circle at 5% 0%, var(--color-glow-a) 0, transparent 32%),
-        radial-gradient(circle at 100% 100%, var(--color-glow-b) 0, transparent 36%),
-        var(--color-background);
+    background: var(--color-background);
 }
 
 .theme-gradient {
@@ -140,13 +137,13 @@ h4 {
 
 @keyframes auth-glow {
     0% {
-        box-shadow: 0 18px 40px -34px #7f3d1e;
+        box-shadow: var(--shadow-card);
     }
     50% {
-        box-shadow: 0 24px 48px -32px #8f3616;
+        box-shadow: var(--shadow-button);
     }
     100% {
-        box-shadow: 0 18px 40px -34px #7f3d1e;
+        box-shadow: var(--shadow-card);
     }
 }
 
