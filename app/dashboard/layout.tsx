@@ -1,6 +1,7 @@
 import { getBackendUrl } from "@/utils/env";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { UserAccountDialog } from "@/components/dashboard/user-account-form";
 
 const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
   const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME ?? "tiny-wins";
@@ -52,6 +53,7 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
             <p className="hidden font-mono text-xs uppercase tracking-[0.16em] text-[var(--color-muted)] sm:block">
               TinyWins
             </p>
+            <UserAccountDialog userData={data} />
             <form action={handleLogout}>
               <button
                 type="submit"
