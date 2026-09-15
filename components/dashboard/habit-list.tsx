@@ -20,7 +20,7 @@ export type HabitWithActivity = Habit & {
     dailyCounts: HabitDailyCount[];
 };
 
-async function getHabitsWithActivity() {
+export async function getHabitsWithActivity() {
     const cookieStore = await cookies();
     const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME ?? "tiny-wins";
     const sessionCookie = cookieStore.get(cookieName);
@@ -83,16 +83,13 @@ async function getHabitsWithActivity() {
     return habitsWithActivity;
 }
 
-export async function HabitList() {
-    let habits: HabitWithActivity[] = [];
-    let fetchError = false;
-
-    try {
-        habits = await getHabitsWithActivity();
-    } catch {
-        fetchError = true;
-    }
-
+export function HabitList({
+    habits,
+    fetchError,
+}: {
+    habits: HabitWithActivity[];
+    fetchError: boolean;
+}) {
     return (
         <section
             data-dashboard-section
@@ -106,7 +103,7 @@ export async function HabitList() {
             </div>
 
             {fetchError ? (
-                    <p className="mt-4 rounded-xl border border-danger-border bg-danger-background px-3 py-2 text-sm text-danger-foreground">
+                <p className="mt-4 rounded-xl border border-danger-border bg-danger-background px-3 py-2 text-sm text-danger-foreground">
                     We could not load your habits right now.
                 </p>
             ) : habits.length === 0 ? (

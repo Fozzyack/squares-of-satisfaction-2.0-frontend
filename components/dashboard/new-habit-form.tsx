@@ -1,6 +1,8 @@
 "use client";
 
 import { getBackendUrl } from "@/utils/env";
+import { useRouter } from "next/navigation";
+import { createPortal } from "react-dom";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 const COLOR_OPTIONS = [
@@ -49,7 +51,8 @@ export function NewHabitForm() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
+  const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
+  const router = useRouter();
   const previewName = form.name.trim() || "Your new habit";
   const previewUnit = form.unit.trim();
   const previewProgress = Math.max(
@@ -62,6 +65,10 @@ export function NewHabitForm() {
       Math.cos(index * 0.15 + form.increment * 0.48) * 0.7;
     return Math.max(0, Math.min(4, Math.floor((wave + 1.55) * 1.35)));
   });
+
+  useEffect(() => {
+    setPortalRoot(document.body);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) {
@@ -87,7 +94,6 @@ export function NewHabitForm() {
 
   const handleOpen = () => {
     setErrorMsg("");
-    setSuccessMsg("");
     setIsOpen(true);
   };
 
@@ -100,7 +106,7 @@ export function NewHabitForm() {
     event.preventDefault();
     setIsSubmitting(true);
     setErrorMsg("");
-    setSuccessMsg("");
+    let didCreate = false;
 
     try {
       const response = await fetch(`${getBackendUrl()}/habits`, {
@@ -125,21 +131,22 @@ export function NewHabitForm() {
         return;
       }
 
-      setSuccessMsg("Habit added. You can now start logging entries for it.");
+      didCreate = true;
       setForm(DEFAULT_FIELDS);
       setIsOpen(false);
     } catch {
       setErrorMsg("Unable to reach the server. Please try again.");
     } finally {
       setIsSubmitting(false);
-      window.location.href = "/dashboard";
+      if (didCreate) {
+        router.refresh();
+      }
     }
   };
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = event.target;
     setErrorMsg("");
-    setSuccessMsg("");
 
     setForm((previous) => ({
       ...previous,
@@ -150,40 +157,17 @@ export function NewHabitForm() {
 
   return (
     <>
-      <section
-        data-dashboard-section
-        className="rounded-2xl border border-card-border bg-card/85 p-5 shadow-section sm:p-7"
+      <button
+        type="button"
+        onClick={handleOpen}
+        className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-button transition hover:-translate-y-px"
       >
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
-              Add habit
-            </p>
-            <h3 className="mt-2 text-2xl">Start a new streak</h3>
-            <p className="mt-2 max-w-xl text-sm text-muted">
-              Create a habit when you&apos;re ready. It will show up in your board.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={handleOpen}
-            className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-button transition hover:-translate-y-px"
-          >
-            + New habit
-          </button>
-        </div>
-        {successMsg && (
-          <p
-            className="mt-4 rounded-xl border border-success-border bg-success-background px-3 py-2 text-sm text-success-foreground"
-            role="status"
-          >
-            {successMsg}
-          </p>
-        )}
-      </section>
+        + New habit
+      </button>
 
-      {isOpen && (
-        <div
+      {isOpen && portalRoot
+        ? createPortal(
+            <div
           className="fixed inset-0 z-50 flex items-start justify-center bg-overlay p-4 pt-10 backdrop-blur-sm sm:items-center sm:pt-4"
           onClick={handleClose}
         >
@@ -398,8 +382,10 @@ export function NewHabitForm() {
               </aside>
             </div>
           </section>
-        </div>
-      )}
+            </div>,
+            portalRoot,
+          )
+        : null}
     </>
   );
 }

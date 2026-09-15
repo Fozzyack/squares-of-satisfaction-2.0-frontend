@@ -154,15 +154,22 @@ function HabitListItem({
       data-habit-item
       className="rounded-xl border border-card-border bg-background/65 px-4 py-3"
     >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-[15px] leading-tight text-foreground">{habit.name}</p>
-          <p className="mt-1 font-mono text-xs uppercase tracking-[0.12em] text-muted">
-            Daily goal: {habit.goal}
-            {goalSuffix}
-          </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex items-start gap-3">
+          <span
+            className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full"
+            style={{ backgroundColor: habit.color ?? "var(--color-primary)" }}
+            aria-hidden="true"
+          />
+          <div>
+            <p className="text-[15px] leading-tight text-foreground">{habit.name}</p>
+            <p className="mt-1 font-mono text-xs uppercase tracking-[0.12em] text-muted">
+              Daily goal: {habit.goal}
+              {goalSuffix}
+            </p>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-start justify-end gap-2">
           <span className="rounded-full bg-accent-2/35 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-foreground">
             Today: {todayCount}
             {goalSuffix}
@@ -170,6 +177,7 @@ function HabitListItem({
           <button
             type="button"
             onClick={() => onSettingsClick(habit)}
+            aria-label={`Delete ${habit.name}`}
             className="rounded-lg border border-card-border bg-background/70 px-2.5 py-1 text-xs text-foreground transition hover:bg-background"
           >
             Delete
@@ -179,7 +187,7 @@ function HabitListItem({
 
       <div
         data-habit-grid
-        className="mt-3 grid auto-cols-[10px] grid-flow-col grid-rows-7 gap-1 overflow-x-auto pb-1 md:auto-cols-[12px]"
+        className="mt-4 grid auto-cols-[10px] grid-flow-col grid-rows-7 gap-1 overflow-x-auto pb-1 md:auto-cols-[12px]"
         role="group"
         aria-label={`${habit.name} activity intensity heatmap`}
       >
@@ -203,37 +211,31 @@ function HabitListItem({
         })}
       </div>
 
-      <div className="mt-3 flex items-center justify-between gap-2 text-sm text-muted">
-        <p>Progress increments toward goal</p>
-        <div className="flex items-center gap-3">
-          <p className="font-mono text-xs uppercase tracking-[0.12em]">
-            Today: {completion}% of goal
-          </p>
-          <HabitRecordButton
-            habitId={habit.id}
-            increment={habit.increment}
-            unit={habit.unit}
-            color={habit.color}
-          />
+      <div className="mt-4 flex items-end gap-3">
+        <div className="min-w-0 flex-1 space-y-2">
+          <div className="flex items-center justify-between text-xs text-muted">
+            <p>
+              {todayCount} / {habit.goal}
+              {goalSuffix}
+            </p>
+            <p>{completion}% complete</p>
+          </div>
+          <div className="h-2 w-full rounded-full bg-accent-0">
+            <div
+              className="h-2 rounded-full transition-all"
+              style={{
+                width: `${completion}%`,
+                backgroundColor: habit.color ?? "var(--color-accent-3)",
+              }}
+            />
+          </div>
         </div>
-      </div>
-      <div className="mt-2 space-y-2">
-        <div className="flex items-center justify-between text-xs text-muted">
-          <p>
-            {todayCount} / {habit.goal}
-            {goalSuffix}
-          </p>
-          <p>{completion}% complete</p>
-        </div>
-        <div className="h-2 w-full rounded-full bg-accent-0">
-          <div
-            className="h-2 rounded-full transition-all"
-            style={{
-              width: `${completion}%`,
-              backgroundColor: habit.color ?? "var(--color-accent-3)",
-            }}
-          />
-        </div>
+        <HabitRecordButton
+          habitId={habit.id}
+          increment={habit.increment}
+          unit={habit.unit}
+          color={habit.color}
+        />
       </div>
     </li>
   );
