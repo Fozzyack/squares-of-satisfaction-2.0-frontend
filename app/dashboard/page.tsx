@@ -16,16 +16,18 @@ const DashboardPage = async () => {
     fetchError = true;
   }
 
-  const totalGoal = habits.reduce((total, habit) => total + habit.goal, 0);
-  const totalToday = habits.reduce(
-    (total, habit) => total + (habit.dailyCounts.at(-1)?.count ?? 0),
-    0,
-  );
   const completedToday = habits.filter(
     (habit) => (habit.dailyCounts.at(-1)?.count ?? 0) >= habit.goal,
   ).length;
-  const completion = totalGoal
-    ? Math.min(100, Math.round((totalToday / totalGoal) * 100))
+  const completion = habits.length
+    ? Math.round(
+        (habits.reduce((total, habit) => {
+          const count = habit.dailyCounts.at(-1)?.count ?? 0;
+          return total + Math.min(1, count / Math.max(habit.goal, 1));
+        }, 0) /
+          habits.length) *
+          100,
+      )
     : 0;
 
   return (
