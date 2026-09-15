@@ -79,7 +79,7 @@ export function HabitRecordButton({
         {isSubmitting ? "Saving..." : `+${increment}${suffix}`}
       </button>
       {errorMsg ? (
-        <p className="text-[11px] text-[#8d3212]" role="alert">
+        <p className="text-[11px] text-danger-foreground" role="alert">
           {errorMsg}
         </p>
       ) : null}

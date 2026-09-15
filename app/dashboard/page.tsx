@@ -14,7 +14,7 @@ const DashboardPage = () => {
       <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 pb-12 pt-6 sm:px-6 sm:pt-8 lg:px-8">
         <section
           data-dashboard-section
-          className="rounded-2xl border border-card-border bg-card/80 p-5 shadow-[0_10px_28px_-24px_rgba(43,22,13,0.9)] backdrop-blur sm:p-7"
+          className="rounded-2xl border border-card-border bg-card/80 p-5 shadow-section backdrop-blur sm:p-7"
         >
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
             Overview

@@ -41,23 +41,23 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="min-h-screen pb-10">
-      <header className="border-b border-[var(--color-card-border)] bg-[var(--color-card)]/70 backdrop-blur">
+      <header className="border-b border-card-border bg-card/70 backdrop-blur">
         <div className="mx-auto flex w-full max-w-5xl items-end justify-between gap-4 px-4 py-5 sm:px-6 lg:px-8">
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.18em] text-[var(--color-muted)]">
+            <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted">
               Dashboard
             </p>
             <h2 className="mt-1 text-3xl sm:text-4xl">Welcome back, {data.name}</h2>
           </div>
           <div className="mb-1 flex items-center gap-3">
-            <p className="hidden font-mono text-xs uppercase tracking-[0.16em] text-[var(--color-muted)] sm:block">
+            <p className="hidden font-mono text-xs uppercase tracking-[0.16em] text-muted sm:block">
               TinyWins
             </p>
             <UserAccountDialog userData={data} />
             <form action={handleLogout}>
               <button
                 type="submit"
-                className="rounded-full border border-[var(--color-card-border)] bg-[var(--color-background)]/70 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--color-muted)] transition hover:text-[var(--color-foreground)]"
+                className="rounded-full border border-card-border bg-background/70 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted transition hover:text-foreground"
               >
                 Logout
               </button>

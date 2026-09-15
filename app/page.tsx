@@ -93,7 +93,7 @@ export default function Home() {
             className="relative isolate min-h-screen bg-background p-4 md:p-8"
             ref={scope}
         >
-            <div className="absolute inset-0 -z-10 rounded-3xl bg-linear-to-br from-[#fff0e1] via-[#fff8f2] to-[#ffeede]" />
+            <div className="theme-gradient absolute inset-0 -z-10 rounded-3xl" />
             <main className="mx-auto grid min-h-[calc(100vh-2rem)] max-w-[1140px] items-center gap-7 py-4 md:min-h-[calc(100vh-4rem)] md:grid-cols-[minmax(0,1fr)_minmax(320px,520px)] md:gap-14 md:py-0">
                 <section className="max-w-[560px]">
                     <p
@@ -119,7 +119,7 @@ export default function Home() {
                     <div className="mt-7 flex flex-wrap gap-3">
                         <Link
                             href="/dashboard"
-                            className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-[0_10px_24px_-14px_#8f3616] transition hover:-translate-y-px"
+                            className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-button transition hover:-translate-y-px"
                             data-animate="cta"
                         >
                             Start tracking
@@ -152,7 +152,7 @@ export default function Home() {
                 </section>
 
                 <section
-                    className="rounded-[20px] border border-card-border bg-card/90 p-4 shadow-[0_18px_40px_-34px_#7f3d1e] md:p-6"
+                    className="rounded-[20px] border border-card-border bg-card/90 p-4 shadow-card md:p-6"
                     aria-label="Habit heat map"
                 >
                     <header className="mb-4 flex items-baseline justify-between gap-3">
@@ -186,7 +186,7 @@ export default function Home() {
                                 key={id}
                                 data-square
                                 data-level={level}
-                                className={`h-[10px] w-[10px] rounded-[3px] border border-[#26110914] md:h-[12px] md:w-[12px] ${LEVEL_CLASSES[level]}`}
+                                className={`h-[10px] w-[10px] rounded-[3px] border border-heatmap-border md:h-[12px] md:w-[12px] ${LEVEL_CLASSES[level]}`}
                                 title={`${count} completions - ${LEVEL_LABELS[level]}`}
                                 aria-hidden="true"
                             />
@@ -201,7 +201,7 @@ export default function Home() {
                         {[0, 1, 2, 3, 4].map((level) => (
                             <span
                                 key={level}
-                                className={`h-[11px] w-[11px] rounded-[3px] border border-[#26110914] ${LEVEL_CLASSES[level]}`}
+                                className={`h-[11px] w-[11px] rounded-[3px] border border-heatmap-border ${LEVEL_CLASSES[level]}`}
                                 data-level={level}
                             />
                         ))}

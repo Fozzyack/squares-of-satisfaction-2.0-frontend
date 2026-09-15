@@ -96,7 +96,7 @@ export async function HabitList() {
     return (
         <section
             data-dashboard-section
-            className="rounded-2xl border border-card-border bg-card/85 p-5 sm:p-7"
+            className="rounded-2xl border border-card-border bg-card/85 p-5 shadow-section sm:p-7"
         >
             <div className="flex items-center justify-between gap-4">
                 <h3 className="text-2xl">Habits</h3>
@@ -106,7 +106,7 @@ export async function HabitList() {
             </div>
 
             {fetchError ? (
-                <p className="mt-4 rounded-xl border border-[#efc2a8] bg-[#ffe6d9] px-3 py-2 text-sm text-[#8d3212]">
+                    <p className="mt-4 rounded-xl border border-danger-border bg-danger-background px-3 py-2 text-sm text-danger-foreground">
                     We could not load your habits right now.
                 </p>
             ) : habits.length === 0 ? (

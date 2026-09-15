@@ -152,7 +152,7 @@ export function NewHabitForm() {
     <>
       <section
         data-dashboard-section
-        className="rounded-2xl border border-card-border bg-card/85 p-5 shadow-[0_10px_28px_-24px_rgba(43,22,13,0.9)] sm:p-7"
+        className="rounded-2xl border border-card-border bg-card/85 p-5 shadow-section sm:p-7"
       >
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
@@ -167,14 +167,14 @@ export function NewHabitForm() {
           <button
             type="button"
             onClick={handleOpen}
-            className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-[0_10px_24px_-14px_#8f3616] transition hover:-translate-y-px"
+            className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-button transition hover:-translate-y-px"
           >
             + New habit
           </button>
         </div>
         {successMsg && (
           <p
-            className="mt-4 rounded-xl border border-[#b7decb] bg-[#e9f8ef] px-3 py-2 text-sm text-[#1f6d46]"
+            className="mt-4 rounded-xl border border-success-border bg-success-background px-3 py-2 text-sm text-success-foreground"
             role="status"
           >
             {successMsg}
@@ -184,11 +184,11 @@ export function NewHabitForm() {
 
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-start justify-center bg-[#2b160d]/40 p-4 pt-10 backdrop-blur-sm sm:items-center sm:pt-4"
+          className="fixed inset-0 z-50 flex items-start justify-center bg-overlay p-4 pt-10 backdrop-blur-sm sm:items-center sm:pt-4"
           onClick={handleClose}
         >
           <section
-            className="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-card-border bg-card p-5 shadow-[0_28px_58px_-28px_rgba(43,22,13,0.88)] sm:p-7"
+            className="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-card-border bg-card p-5 shadow-modal sm:p-7"
             role="dialog"
             aria-modal="true"
             aria-label="Create new habit"
@@ -223,7 +223,7 @@ export function NewHabitForm() {
                       value={form.name}
                       onChange={handleOnChange}
                       placeholder="Drink water"
-                      className="w-full rounded-xl border border-card-border bg-white/80 px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="w-full rounded-xl border border-card-border bg-input px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
                       required
                       disabled={isSubmitting}
                     />
@@ -240,7 +240,7 @@ export function NewHabitForm() {
                       max={9999}
                       value={form.goal}
                       onChange={handleOnChange}
-                      className="w-full rounded-xl border border-card-border bg-white/80 px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="w-full rounded-xl border border-card-border bg-input px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
                       required
                       disabled={isSubmitting}
                     />
@@ -257,7 +257,7 @@ export function NewHabitForm() {
                       max={9999}
                       value={form.increment}
                       onChange={handleOnChange}
-                      className="w-full rounded-xl border border-card-border bg-white/80 px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="w-full rounded-xl border border-card-border bg-input px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
                       required
                       disabled={isSubmitting}
                     />
@@ -273,7 +273,7 @@ export function NewHabitForm() {
                       value={form.unit}
                       onChange={handleOnChange}
                       placeholder="cups"
-                      className="w-full rounded-xl border border-card-border bg-white/80 px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="w-full rounded-xl border border-card-border bg-input px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
                       disabled={isSubmitting}
                     />
                   </label>
@@ -320,7 +320,7 @@ export function NewHabitForm() {
 
                 {errorMsg && (
                   <p
-                    className="rounded-xl border border-[#efc2a8] bg-[#ffe6d9] px-3 py-2 text-sm text-[#8d3212]"
+                    className="rounded-xl border border-danger-border bg-danger-background px-3 py-2 text-sm text-danger-foreground"
                     role="alert"
                   >
                     {errorMsg}
@@ -338,7 +338,7 @@ export function NewHabitForm() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-[0_10px_24px_-14px_#8f3616] transition hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+                    className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-button transition hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
                   >
                     {isSubmitting ? "Adding habit..." : "Add habit"}
                   </button>

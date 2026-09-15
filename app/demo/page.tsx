@@ -8,11 +8,11 @@ import { useGSAP } from "@gsap/react";
 gsap.registerPlugin(useGSAP);
 
 const LEVEL_CLASSES = [
-  "bg-blue-500/20",
-  "bg-blue-500/40",
-  "bg-blue-500/60",
-  "bg-blue-500/80",
-  "bg-blue-500/100",
+  "bg-accent-0",
+  "bg-accent-1",
+  "bg-accent-2",
+  "bg-accent-3",
+  "bg-accent-4",
 ];
 
 const DAILY_GOAL = 8;
@@ -73,7 +73,7 @@ export default function DemoPage() {
         <Card className="w-full">
           <div className="space-y-1.5 p-5">
             <h2 className="h2">Demo</h2>
-            <p className="text-sm text-black/65">Track your daily hydration and keep your streak moving.</p>
+          <p className="text-sm text-muted">Track your daily hydration and keep your streak moving.</p>
           </div>
           <div className="space-y-4 px-5 pb-5">
             <div className="flex items-center justify-between">
@@ -82,14 +82,14 @@ export default function DemoPage() {
                 <button
                   type="button"
                   onClick={handleResetWater}
-                  className="rounded-lg border border-black/10 px-3 py-2 text-sm text-black/70 transition-colors hover:bg-black/[0.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+                  className="rounded-lg border border-card-border px-3 py-2 text-sm text-muted transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
                 >
                   Reset
                 </button>
                 <button
                   type="button"
                   onClick={handleAddWater}
-                  className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+                  className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
                 >
                   +1
                 </button>
@@ -105,14 +105,14 @@ export default function DemoPage() {
                   key={id}
                   data-square
                   data-level={level}
-                  className={`h-[10px] w-[10px] rounded-[3px] border border-[#26110914] md:h-[12px] md:w-[12px] ${LEVEL_CLASSES[level]}`}
+                  className={`h-[10px] w-[10px] rounded-[3px] border border-heatmap-border md:h-[12px] md:w-[12px] ${LEVEL_CLASSES[level]}`}
                   aria-label={`${count} cups logged`}
                 />
               ))}
               <span
                 data-square
                 data-level={4}
-                className="h-[10px] w-[10px] rounded-[3px] border border-[#26110914] bg-blue-500 md:h-[12px] md:w-[12px]"
+                className="h-[10px] w-[10px] rounded-[3px] border border-heatmap-border bg-primary md:h-[12px] md:w-[12px]"
                 style={{ opacity: Math.max(0.2, Math.min(completionPercent / 100, 1)) }}
                 aria-label={`Today: ${cupsLogged} cups`}
               />
@@ -120,21 +120,21 @@ export default function DemoPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <p className="font-medium">{cupsLogged} / {DAILY_GOAL} cups</p>
-                <p className="text-black/65">{completionPercent}% complete</p>
+                <p className="text-muted">{completionPercent}% complete</p>
               </div>
-              <div className="h-2 w-full rounded-full bg-blue-100">
+                <div className="h-2 w-full rounded-full bg-accent-0">
                 <div
-                  className="h-2 rounded-full bg-blue-500 transition-all"
+                  className="h-2 rounded-full bg-primary transition-all"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
             </div>
-            <div className="flex items-center justify-end gap-2 text-xs text-black/60">
+            <div className="flex items-center justify-end gap-2 text-xs text-muted">
               <span>Less</span>
               {LEVEL_CLASSES.map((levelClass, index) => (
                 <span
                   key={levelClass}
-                  className={`h-3 w-3 rounded-[3px] border border-[#26110914] ${levelClass}`}
+                  className={`h-3 w-3 rounded-[3px] border border-heatmap-border ${levelClass}`}
                   aria-hidden="true"
                   title={`Intensity ${index + 1}`}
                 />

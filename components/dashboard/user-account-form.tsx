@@ -222,7 +222,7 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
                 onClick={handleOpen}
                 aria-label="Open account settings"
                 title="Settings"
-                className="group inline-flex h-7 w-7 items-center justify-center rounded-full border border-[var(--color-card-border)] bg-[var(--color-background)]/70 text-[var(--color-muted)] transition hover:text-[var(--color-foreground)]"
+                className="group inline-flex h-7 w-7 items-center justify-center rounded-full border border-card-border bg-background/70 text-muted transition hover:text-foreground"
             >
                 <Settings
                     className="h-4 w-4 motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:animate-spin"
@@ -232,9 +232,9 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
             </button>
             {isOpen &&
                 createPortal(
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2b160d]/40 p-4 backdrop-blur-sm">
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-overlay p-4 backdrop-blur-sm">
                         <section
-                            className="max-h-[90vh] max-w-lg overflow-y-auto rounded-2xl border border-card-border bg-card p-5 shadow-[0_28px_58px_-28px_rgba(43,22,13,0.88)] sm:p-7"
+                            className="max-h-[90vh] max-w-lg overflow-y-auto rounded-2xl border border-card-border bg-card p-5 shadow-modal sm:p-7"
                             role="dialog"
                             aria-modal="true"
                             aria-label="Update account settings"
@@ -360,11 +360,11 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
                 isDeleteModalOpen &&
                 createPortal(
                     <div
-                        className="fixed inset-0 z-[120] flex items-start justify-center bg-[#2b160d]/40 p-4 pt-10 backdrop-blur-sm sm:items-center sm:pt-4"
+                        className="fixed inset-0 z-[120] flex items-start justify-center bg-overlay p-4 pt-10 backdrop-blur-sm sm:items-center sm:pt-4"
                         onClick={closeDeleteModal}
                     >
                         <section
-                            className="w-full max-w-md rounded-2xl border border-card-border bg-card p-5 shadow-[0_28px_58px_-28px_rgba(43,22,13,0.88)] sm:p-6"
+                            className="w-full max-w-md rounded-2xl border border-card-border bg-card p-5 shadow-modal sm:p-6"
                             role="dialog"
                             aria-modal="true"
                             aria-label="Delete account confirmation"
@@ -407,7 +407,7 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
                                     type="button"
                                     onClick={handleDeleteAccount}
                                     disabled={isDeletingAccount || isDeleteRedirecting}
-                                    className="rounded-full bg-[#8d3212] px-5 py-2 text-sm font-semibold text-white transition hover:-translate-y-px hover:bg-[#7a2c10] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+                                    className="rounded-full bg-danger px-5 py-2 text-sm font-semibold text-primary-foreground transition hover:-translate-y-px hover:bg-danger-hover disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
                                 >
                                     {isDeletingAccount
                                         ? "Deleting..."
@@ -418,7 +418,7 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
                             </div>
                             {deleteErrorMsg ? (
                                 <p
-                                    className="mt-3 rounded-xl border border-[#efc2a8] bg-[#ffe6d9] px-3 py-2 text-sm text-[#8d3212]"
+                                    className="mt-3 rounded-xl border border-danger-border bg-danger-background px-3 py-2 text-sm text-danger-foreground"
                                     role="alert"
                                 >
                                     {deleteErrorMsg}
@@ -426,7 +426,7 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
                             ) : null}
                             {successMsg ? (
                                 <p
-                                    className="mt-3 rounded-xl border border-[#b7decb] bg-[#e9f8ef] px-3 py-2 text-sm text-[#1f6d46]"
+                                    className="mt-3 rounded-xl border border-success-border bg-success-background px-3 py-2 text-sm text-success-foreground"
                                     role="status"
                                 >
                                     {successMsg}

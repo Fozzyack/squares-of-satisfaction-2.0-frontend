@@ -442,11 +442,11 @@ export function HabitListClient({ habits }: HabitListClientProps) {
 
       {settingsHabit && isSettingsModalOpen ? (
         <div
-          className="fixed inset-0 z-[120] flex items-start justify-center bg-[#2b160d]/40 p-4 pt-10 backdrop-blur-sm sm:items-center sm:pt-4"
+          className="fixed inset-0 z-[120] flex items-start justify-center bg-overlay p-4 pt-10 backdrop-blur-sm sm:items-center sm:pt-4"
           onClick={closeSettingsModal}
         >
           <section
-            className="w-full max-w-md rounded-2xl border border-card-border bg-card p-5 shadow-[0_28px_58px_-28px_rgba(43,22,13,0.88)] sm:p-6"
+            className="w-full max-w-md rounded-2xl border border-card-border bg-card p-5 shadow-modal sm:p-6"
             role="dialog"
             aria-modal="true"
             aria-label={`Settings for ${settingsHabit.name}`}
@@ -485,13 +485,13 @@ export function HabitListClient({ habits }: HabitListClientProps) {
                 type="button"
                 onClick={() => handleDeleteHabit(settingsHabit.id)}
                 disabled={isDeletingHabit}
-                className="rounded-full bg-[#8d3212] px-5 py-2 text-sm font-semibold text-white transition hover:-translate-y-px hover:bg-[#7a2c10] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+                className="rounded-full bg-danger px-5 py-2 text-sm font-semibold text-primary-foreground transition hover:-translate-y-px hover:bg-danger-hover disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
               >
                 {isDeletingHabit ? "Deleting..." : "Delete habit"}
               </button>
             </div>
             {deleteError ? (
-              <p className="mt-3 rounded-xl border border-[#efc2a8] bg-[#ffe6d9] px-3 py-2 text-sm text-[#8d3212]" role="alert">
+              <p className="mt-3 rounded-xl border border-danger-border bg-danger-background px-3 py-2 text-sm text-danger-foreground" role="alert">
                 {deleteError}
               </p>
             ) : null}
@@ -502,7 +502,7 @@ export function HabitListClient({ habits }: HabitListClientProps) {
       {selectedHabit && selectedDate && portalRoot
         ? createPortal(
             <aside
-              className={`fixed right-0 top-0 z-[100] h-dvh w-full max-w-md border-l border-card-border bg-card p-5 shadow-[-12px_0_28px_-20px_rgba(43,22,13,0.85)] transition-transform duration-300 ease-out sm:p-6 ${isDrawerOpen ? "translate-x-0" : "translate-x-full"}`}
+              className={`fixed right-0 top-0 z-[100] h-dvh w-full max-w-md border-l border-card-border bg-card p-5 shadow-drawer transition-transform duration-300 ease-out sm:p-6 ${isDrawerOpen ? "translate-x-0" : "translate-x-full"}`}
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -526,7 +526,7 @@ export function HabitListClient({ habits }: HabitListClientProps) {
                 {isLoadingLogs ? (
                   <p className="text-sm text-muted">Loading logs...</p>
                 ) : logsError ? (
-                  <p className="rounded-xl border border-[#efc2a8] bg-[#ffe6d9] px-3 py-2 text-sm text-[#8d3212]">
+                  <p className="rounded-xl border border-danger-border bg-danger-background px-3 py-2 text-sm text-danger-foreground">
                     {logsError}
                   </p>
                 ) : logs.length === 0 ? (

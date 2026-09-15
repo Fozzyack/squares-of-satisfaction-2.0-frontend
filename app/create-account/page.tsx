@@ -59,7 +59,7 @@ export default function CreateAccountPage() {
 
     return (
         <div className="relative isolate min-h-screen bg-background p-4 md:p-8">
-            <div className="auth-anim-bg absolute inset-0 -z-10 rounded-3xl bg-linear-to-br from-[#fff0e1] via-[#fff8f2] to-[#ffeede]" />
+            <div className="auth-anim-bg theme-gradient absolute inset-0 -z-10 rounded-3xl" />
 
             <main className="mx-auto grid min-h-[calc(100vh-2rem)] w-full max-w-[1140px] items-center py-4 md:min-h-[calc(100vh-4rem)] md:py-0">
                 <div className="auth-anim-shell mx-auto w-full max-w-[430px]">
@@ -67,7 +67,7 @@ export default function CreateAccountPage() {
                         <p className="mb-4 text-sm">{"<"}- Back to Landing</p>
                     </Link>
 
-                    <section className="auth-anim-card w-full rounded-[20px] border border-card-border bg-card/90 p-6 shadow-[0_18px_40px_-34px_#7f3d1e] md:p-7">
+                    <section className="auth-anim-card w-full rounded-[20px] border border-card-border bg-card/90 p-6 shadow-card md:p-7">
                         <p className="auth-anim-item auth-anim-item-1 m-0 text-[0.74rem] font-semibold uppercase tracking-[0.12em] text-muted">
                             New to TinyWins
                         </p>
@@ -94,7 +94,7 @@ export default function CreateAccountPage() {
                                     onChange={handleInputChange}
                                     autoComplete="name"
                                     placeholder="Your name"
-                                    className="w-full rounded-xl border border-card-border bg-white/80 px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
+                                    className="w-full rounded-xl border border-card-border bg-input px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
                                     required
                                     disabled={loading}
                                 />
@@ -111,7 +111,7 @@ export default function CreateAccountPage() {
                                     onChange={handleInputChange}
                                     autoComplete="email"
                                     placeholder="you@example.com"
-                                    className="w-full rounded-xl border border-card-border bg-white/80 px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
+                                    className="w-full rounded-xl border border-card-border bg-input px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
                                     required
                                     disabled={loading}
                                 />
@@ -128,7 +128,7 @@ export default function CreateAccountPage() {
                                     onChange={handleInputChange}
                                     autoComplete="new-password"
                                     placeholder="Create a password"
-                                    className="w-full rounded-xl border border-card-border bg-white/80 px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
+                                    className="w-full rounded-xl border border-card-border bg-input px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
                                     required
                                     disabled={loading}
                                 />
@@ -136,7 +136,7 @@ export default function CreateAccountPage() {
 
                             {errorMsg && (
                                 <p
-                                    className="rounded-xl border border-[#efc2a8] bg-[#ffe6d9] px-3 py-2 text-sm text-[#8d3212]"
+                                    className="rounded-xl border border-danger-border bg-danger-background px-3 py-2 text-sm text-danger-foreground"
                                     role="alert"
                                 >
                                     {errorMsg}
@@ -145,7 +145,7 @@ export default function CreateAccountPage() {
 
                             {successMsg && (
                                 <p
-                                    className="rounded-xl border border-[#b7decb] bg-[#e9f8ef] px-3 py-2 text-sm text-[#1f6d46]"
+                                    className="rounded-xl border border-success-border bg-success-background px-3 py-2 text-sm text-success-foreground"
                                     role="status"
                                 >
                                     {successMsg}
@@ -155,7 +155,7 @@ export default function CreateAccountPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="auth-anim-item auth-anim-item-5 w-full rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-[0_10px_24px_-14px_#8f3616] transition hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+                                className="auth-anim-item auth-anim-item-5 w-full rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-button transition hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
                             >
                                 {loading
                                     ? "Creating account..."
