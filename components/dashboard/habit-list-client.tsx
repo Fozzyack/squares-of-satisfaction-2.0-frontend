@@ -245,6 +245,7 @@ function HabitListItem({
                 </div>
                 <HabitRecordButton
                     habitId={habit.id}
+                    todayCount={todayCount}
                     increment={habit.increment}
                     unit={habit.unit}
                     color={habit.color}

@@ -6,6 +6,7 @@ import { useState } from "react";
 
 type HabitRecordButtonProps = {
     habitId: string;
+    todayCount: number;
     increment: number;
     unit: string | null;
     color: string | null;
@@ -21,6 +22,7 @@ function getTodayDateString() {
 
 export function HabitRecordButton({
     habitId,
+    todayCount,
     increment,
     unit,
     color,
@@ -34,27 +36,35 @@ export function HabitRecordButton({
         color ?? "",
     );
 
-    const handleRecord = async () => {
+    const [isUndoing, setIsUndoing] = useState(false);
+
+    const handleRecord = async (undo = false) => {
         if (isSubmitting) {
             return;
         }
 
         setIsSubmitting(true);
+        setIsUndoing(undo);
         setErrorMsg("");
+        const date = getTodayDateString();
 
         try {
             const response = await fetch(
-                `${getBackendUrl()}/habits/${habitId}/record`,
+                `${getBackendUrl()}/habits/${habitId}/record?date=${date}`,
                 {
-                    method: "POST",
+                    method: undo ? "DELETE" : "POST",
                     credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        amount: increment,
-                        date: getTodayDateString(),
-                    }),
+                    ...(undo
+                        ? {}
+                        : {
+                              headers: {
+                                  "Content-Type": "application/json",
+                              },
+                              body: JSON.stringify({
+                                  amount: increment,
+                                  date,
+                              }),
+                          }),
                 },
             );
 
@@ -69,24 +79,37 @@ export function HabitRecordButton({
             setErrorMsg("Could not reach server");
         } finally {
             setIsSubmitting(false);
+            setIsUndoing(false);
         }
     };
 
     return (
         <div className="flex flex-col items-end gap-1">
-            <button
-                type="button"
-                onClick={handleRecord}
-                disabled={isSubmitting}
-                className={`rounded-lg px-3 py-1.5 text-xs font-semibold text-primary-foreground transition hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0 hover:cursor-pointer ${hasCustomColor ? "" : "bg-primary"}`}
-                style={
-                    hasCustomColor
-                        ? { backgroundColor: color ?? undefined }
-                        : undefined
-                }
-            >
-                {isSubmitting ? "Saving..." : `+${increment}${suffix}`}
-            </button>
+            <div className="flex gap-2">
+                {todayCount > 0 ? (
+                    <button
+                        type="button"
+                        onClick={() => handleRecord(true)}
+                        disabled={isSubmitting}
+                        className="rounded-lg border border-card-border bg-background/70 px-3 py-1.5 text-xs font-semibold text-foreground transition hover:-translate-y-px hover:bg-background disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+                    >
+                        {isUndoing ? "Undoing..." : "Undo"}
+                    </button>
+                ) : null}
+                <button
+                    type="button"
+                    onClick={() => handleRecord()}
+                    disabled={isSubmitting}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-semibold text-primary-foreground transition hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0 hover:cursor-pointer ${hasCustomColor ? "" : "bg-primary"}`}
+                    style={
+                        hasCustomColor
+                            ? { backgroundColor: color ?? undefined }
+                            : undefined
+                    }
+                >
+                    {isSubmitting ? "Saving..." : `+${increment}${suffix}`}
+                </button>
+            </div>
             {errorMsg ? (
                 <p className="text-[11px] text-danger-foreground" role="alert">
                     {errorMsg}
