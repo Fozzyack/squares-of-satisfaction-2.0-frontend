@@ -9,6 +9,7 @@ import { Settings } from "lucide-react";
 type UserAccountDialogProps = {
     userData: {
         name?: string;
+        email?: string;
     };
 };
 
@@ -140,7 +141,8 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
             if (!response.ok) {
                 const data = await response.json().catch(() => null);
                 setDeleteErrorMsg(
-                    data?.error ?? "Could not delete account. Please try again.",
+                    data?.error ??
+                        "Could not delete account. Please try again.",
                 );
                 return;
             }
@@ -276,6 +278,19 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
                                             />
                                         </div>
                                         <div>
+                                            <label className="block text-sm font-medium text-muted">
+                                                Email
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="email"
+                                                value={userData.email ?? ""}
+                                                disabled
+                                                readOnly
+                                                className="mt-1 block w-full rounded-md border border-card-border bg-background/70 px-3 py-2 text-sm text-foreground/70 shadow-sm focus:border-foreground focus:ring-1 focus:ring-foreground hover:cursor-not-allowed"
+                                            />
+                                        </div>
+                                        <div>
                                             <label
                                                 htmlFor="password"
                                                 className="block text-sm font-medium text-muted"
@@ -382,7 +397,9 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
                                 <button
                                     type="button"
                                     onClick={closeDeleteModal}
-                                    disabled={isDeletingAccount || isDeleteRedirecting}
+                                    disabled={
+                                        isDeletingAccount || isDeleteRedirecting
+                                    }
                                     className="rounded-full border border-card-border bg-background/70 px-3 py-1.5 text-xs font-mono uppercase tracking-[0.12em] text-muted transition hover:text-foreground"
                                 >
                                     Close
@@ -398,7 +415,9 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
                                 <button
                                     type="button"
                                     onClick={closeDeleteModal}
-                                    disabled={isDeletingAccount || isDeleteRedirecting}
+                                    disabled={
+                                        isDeletingAccount || isDeleteRedirecting
+                                    }
                                     className="rounded-full border border-card-border bg-background/70 px-4 py-2 text-sm text-foreground transition hover:bg-background disabled:cursor-not-allowed disabled:opacity-50"
                                 >
                                     Cancel
@@ -406,7 +425,9 @@ export function UserAccountDialog({ userData }: UserAccountDialogProps) {
                                 <button
                                     type="button"
                                     onClick={handleDeleteAccount}
-                                    disabled={isDeletingAccount || isDeleteRedirecting}
+                                    disabled={
+                                        isDeletingAccount || isDeleteRedirecting
+                                    }
                                     className="rounded-full bg-danger px-5 py-2 text-sm font-semibold text-primary-foreground transition hover:-translate-y-px hover:bg-danger-hover disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
                                 >
                                     {isDeletingAccount
