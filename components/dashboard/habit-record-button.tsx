@@ -70,7 +70,12 @@ export function HabitRecordButton({
 
             if (!response.ok) {
                 const data = await response.json().catch(() => null);
-                setErrorMsg(data?.error ?? "Could not record progress");
+                setErrorMsg(
+                    data?.error ??
+                        (undo
+                            ? "Could not undo progress"
+                            : "Could not record progress"),
+                );
                 return;
             }
 
@@ -107,7 +112,11 @@ export function HabitRecordButton({
                             : undefined
                     }
                 >
-                    {isSubmitting ? "Saving..." : `+${increment}${suffix}`}
+                    {isSubmitting
+                        ? isUndoing
+                            ? "Undoing..."
+                            : "Saving..."
+                        : `+${increment}${suffix}`}
                 </button>
             </div>
             {errorMsg ? (
