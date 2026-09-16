@@ -186,7 +186,7 @@ function HabitListItem({
                         type="button"
                         onClick={() => onSettingsClick(habit)}
                         aria-label={`Delete ${habit.name}`}
-                        className="rounded-lg border border-card-border bg-background/70 px-2.5 py-1 text-xs text-foreground transition hover:bg-background"
+                        className="rounded-lg border border-card-border bg-background/70 px-2.5 py-1 text-xs text-foreground transition hover:bg-background hover:cursor-pointerh"
                     >
                         Delete
                     </button>
