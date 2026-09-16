@@ -65,7 +65,8 @@ export async function getHabitsWithActivity() {
                     };
                 }
 
-                const dailyCounts = (await recordsResponse.json()) as HabitDailyCount[];
+                const dailyCounts =
+                    (await recordsResponse.json()) as HabitDailyCount[];
 
                 return {
                     ...habit,
