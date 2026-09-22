@@ -29,7 +29,6 @@
     --color-accent-2: #db9b7d;
     --color-accent-3: #cf7053;
     --color-accent-4: #c65338;
-    --shadow-button: 0 10px 24px -14px rgba(151, 57, 35, 0.55);
     --shadow-card: 0 18px 40px -34px rgba(74, 49, 35, 0.5);
     --shadow-section: 0 10px 28px -24px rgba(74, 49, 35, 0.42);
     --shadow-modal: 0 28px 58px -28px rgba(53, 39, 31, 0.48);
@@ -40,6 +39,7 @@
 
 :root {
     color-scheme: light;
+    --shadow-button: 0 10px 24px -14px rgba(151, 57, 35, 0.55);
 }
 
 :root[data-theme="dark"] {
@@ -96,6 +96,10 @@ body {
     );
 }
 
+.shadow-button {
+    box-shadow: var(--shadow-button);
+}
+
 h1 {
     @apply text-6xl leading-[1.04] font-normal tracking-[-0.03em] text-foreground;
 }
@@ -123,42 +127,9 @@ h4 {
     }
 }
 
-@keyframes auth-soft-float {
-    0% {
-        transform: translate3d(0, 0, 0) scale(1);
-    }
-    50% {
-        transform: translate3d(0, -8px, 0) scale(1.015);
-    }
-    100% {
-        transform: translate3d(0, 0, 0) scale(1);
-    }
-}
-
-@keyframes auth-glow {
-    0% {
-        box-shadow: var(--shadow-card);
-    }
-    50% {
-        box-shadow: var(--shadow-button);
-    }
-    100% {
-        box-shadow: var(--shadow-card);
-    }
-}
-
-.auth-anim-bg {
-    animation: auth-soft-float 10s ease-in-out infinite;
-    transform-origin: center;
-}
-
 .auth-anim-shell {
     opacity: 0;
     animation: auth-fade-up 540ms cubic-bezier(0.2, 0.75, 0.25, 1) forwards;
-}
-
-.auth-anim-card {
-    animation: auth-glow 6.4s ease-in-out 640ms infinite;
 }
 
 .auth-anim-item {
@@ -187,9 +158,7 @@ h4 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .auth-anim-bg,
     .auth-anim-shell,
-    .auth-anim-card,
     .auth-anim-item,
     .auth-anim-item-1,
     .auth-anim-item-2,

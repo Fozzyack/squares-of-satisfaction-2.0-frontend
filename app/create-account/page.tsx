@@ -14,6 +14,7 @@ export default function CreateAccountPage() {
     const [errorMsg, setErrorMsg] = useState("");
     const [successMsg, setSuccessMsg] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -58,36 +59,35 @@ export default function CreateAccountPage() {
     };
 
     return (
-        <div className="relative isolate min-h-screen bg-background p-4 md:p-8">
-            <div className="auth-anim-bg theme-gradient absolute inset-0 -z-10 rounded-3xl" />
-
+        <div className="min-h-screen bg-background p-4 md:p-8">
             <main className="mx-auto grid min-h-[calc(100vh-2rem)] w-full max-w-[1140px] items-center py-4 md:min-h-[calc(100vh-4rem)] md:py-0">
-                <div className="auth-anim-shell mx-auto w-full max-w-[430px]">
-                    <Link href="/">
-                        <p className="mb-4 text-sm">{"<"}- Back to Landing</p>
+                <div className="auth-anim-shell mx-auto w-full max-w-[440px]">
+                    <Link
+                        href="/"
+                        className="mb-5 inline-flex text-sm font-medium text-muted transition hover:text-foreground"
+                    >
+                        {"<- Back to home"}
                     </Link>
 
-                    <section className="auth-anim-card w-full rounded-[20px] border border-card-border bg-card/90 p-6 shadow-card md:p-7">
-                        <p className="auth-anim-item auth-anim-item-1 m-0 text-[0.74rem] font-semibold uppercase tracking-[0.12em] text-muted">
-                            New to TinyWins
-                        </p>
-                        <h1 className="auth-anim-item auth-anim-item-2 mt-3 text-3xl leading-tight font-medium tracking-tight text-foreground md:text-4xl">
+                    <section className="w-full rounded-[20px] border border-card-border bg-card p-6 shadow-card md:p-8">
+                        <h1 className="auth-anim-item auth-anim-item-1 text-3xl leading-tight font-medium tracking-tight text-foreground md:text-[2rem]">
                             Create your account
                         </h1>
-                        <p className="auth-anim-item auth-anim-item-3 mt-3 text-sm leading-relaxed text-muted">
+                        <p className="auth-anim-item auth-anim-item-2 mt-2 text-sm leading-relaxed text-muted">
                             Start tracking tiny daily wins and build streaks you
                             can actually see.
                         </p>
 
                         <form
-                            className="auth-anim-item auth-anim-item-4 mt-6 space-y-4"
+                            className="auth-anim-item auth-anim-item-3 mt-7 space-y-4"
                             onSubmit={handleSubmit}
                         >
-                            <label className="block">
+                            <label className="block" htmlFor="name">
                                 <span className="mb-1.5 block text-sm font-medium text-foreground">
                                     Name
                                 </span>
                                 <input
+                                    id="name"
                                     type="text"
                                     name="name"
                                     value={formField.name}
@@ -100,11 +100,12 @@ export default function CreateAccountPage() {
                                 />
                             </label>
 
-                            <label className="block">
+                            <label className="block" htmlFor="email">
                                 <span className="mb-1.5 block text-sm font-medium text-foreground">
                                     Email
                                 </span>
                                 <input
+                                    id="email"
                                     type="email"
                                     name="email"
                                     value={formField.email}
@@ -117,21 +118,73 @@ export default function CreateAccountPage() {
                                 />
                             </label>
 
-                            <label className="block">
+                            <label className="block" htmlFor="password">
                                 <span className="mb-1.5 block text-sm font-medium text-foreground">
                                     Password
                                 </span>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    value={formField.password}
-                                    onChange={handleInputChange}
-                                    autoComplete="new-password"
-                                    placeholder="Create a password"
-                                    className="w-full rounded-xl border border-card-border bg-input px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
-                                    required
-                                    disabled={loading}
-                                />
+                                <div className="relative">
+                                    <input
+                                        id="password"
+                                        type={showPassword ? "text" : "password"}
+                                        name="password"
+                                        value={formField.password}
+                                        onChange={handleInputChange}
+                                        autoComplete="new-password"
+                                        placeholder="Create a password"
+                                        className="w-full rounded-xl border border-card-border bg-input px-4 py-3 pr-11 text-sm text-foreground outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
+                                        required
+                                        disabled={loading}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setShowPassword((prev) => !prev)
+                                        }
+                                        aria-label={
+                                            showPassword
+                                                ? "Hide password"
+                                                : "Show password"
+                                        }
+                                        disabled={loading}
+                                        className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-muted transition hover:text-foreground disabled:cursor-not-allowed disabled:opacity-70"
+                                    >
+                                        {showPassword ? (
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="1.8"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                className="h-4 w-4"
+                                                aria-hidden="true"
+                                            >
+                                                <path d="M3 3l18 18" />
+                                                <path d="M10.6 5.7A9.8 9.8 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a17 17 0 0 1-3.4 4.2" />
+                                                <path d="M6.7 6.7A16.6 16.6 0 0 0 2.5 12S6 18.5 12 18.5a9.7 9.7 0 0 0 3.9-.8" />
+                                                <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" />
+                                            </svg>
+                                        ) : (
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="1.8"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                className="h-4 w-4"
+                                                aria-hidden="true"
+                                            >
+                                                <path d="M2.5 12S6 5.5 12 5.5S21.5 12 21.5 12S18 18.5 12 18.5S2.5 12 2.5 12Z" />
+                                                <circle
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="2.5"
+                                                />
+                                            </svg>
+                                        )}
+                                    </button>
+                                </div>
                             </label>
 
                             {errorMsg && (
@@ -155,7 +208,7 @@ export default function CreateAccountPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="auth-anim-item auth-anim-item-5 w-full rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-button transition hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+                                className="auth-anim-item auth-anim-item-4 w-full rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-button transition hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
                             >
                                 {loading
                                     ? "Creating account..."
@@ -163,11 +216,11 @@ export default function CreateAccountPage() {
                             </button>
                         </form>
 
-                        <div className="auth-anim-item auth-anim-item-5 mt-5 text-sm text-muted">
-                            Already have an account?{" "}
+                        <div className="auth-anim-item auth-anim-item-5 mt-6 border-t border-card-border pt-5 text-center text-sm text-muted">
+                            <span>Already have an account? </span>
                             <Link
                                 href="/login"
-                                className="font-semibold text-foreground transition hover:text-primary"
+                                className="font-semibold text-foreground underline decoration-card-border underline-offset-4 transition hover:text-primary hover:decoration-primary"
                             >
                                 Sign in
                             </Link>
