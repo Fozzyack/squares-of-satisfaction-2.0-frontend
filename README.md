@@ -1,3 +1,5 @@
+# [DEPRECATED] Has been moved to another repo
+
 # Frontend
 
 Next.js app for the habit tracker dashboard.
